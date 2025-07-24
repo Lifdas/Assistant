@@ -1,0 +1,22 @@
+{"metal_ressources": [
+            { "id": 5, "value": 1.449 },
+            { "id": 6, "value": 1.913 },
+            { "id": 7, "value": 2.455 },
+            { "id": 8, "value": 3.086 },
+            { "id": 9, "value": 3.819 },
+            { "id": 10, "value": 4.668 },
+            { "id": 11, "value": 5.649 },
+            { "id": 12, "value": 6.779 },
+            { "id": 13, "value": 8.078 },
+            { "id": 14, "value": 9.569 },
+            { "id": 15, "value": 11.278 },
+            { "id": 16, "value": 13.233 },
+            { "id": 17, "value": 15.466 },
+            { "id": 18, "value": 18.014 },
+            { "id": 19, "value": 20.916 }
+        ],
+    "cristal_ressources": [
+        
+    ]    
+    
+}

@@ -1,0 +1,75 @@
+<div x-data="$store.Delai" x-init="mounted">
+    <div class="ui form">
+        <h3>Temps avant obtention des ressources</h3>
+        <label>Montant voulu</label>
+        <input type="number" @change="calculerDelai" x-model="montant.voulu" placeholder="insérez le montant voulu">
+        <label>Montant actuel</label>
+        <input type="number" @change="calculerDelai" x-model="montant.actuel" placeholder="insérez votre stock">
+        <label>Montant gagné /H</label>
+        <input type="number" @change="calculerDelai" x-model="montant.gagne_par_heure"
+            placeholder="insérez votre rendement horaire">
+        <div class="ui message" style="margin-top:1em;">
+            <p>Temps nécessaire : <strong x-text="temps_necessaire"></strong></p>
+            <p>Fin estimée le : <strong x-text="date_fin"></strong></p>
+        </div>
+    </div>
+
+    <h3>Ajouter un intervalle</h3>
+    <div class="ui form" style="display:flex; flex-direction: row;">
+        <div class="three fields">
+            <div class="field">
+                <label>Jours</label>
+                <input type="number" min="0" x-model.number="timeInput.jours" @change="calculerDateFuture">
+            </div>
+            <div class="field">
+                <label>Heures</label>
+                <input type="number" min="0" x-model.number="timeInput.heures" @change="calculerDateFuture">
+            </div>
+            <div class="field">
+                <label>Minutes</label>
+                <input type="number" min="0" x-model.number="timeInput.minutes" @change="calculerDateFuture">
+            </div>
+        </div>
+    </div>
+    <div class="ui message" style="margin-top:1em;">
+        <p>Date & heure future : <strong x-text="dateResult"></strong></p>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    Alpine.store('Delai', {
+        mounted() {
+        },
+        montant: {
+            voulu: null,
+            actuel: null,
+            gagne_par_heure: null
+        },
+        temps_necessaire: "--:--",
+        date_fin: '--/--/---- --:--',
+
+        timeInput: { jours: 0, heures: 0, minutes: 0 },
+        dateResult: '--/--/---- --:--',
+
+
+        async calculerDelai() {
+            const res = await pywebview.api.calculer_delai(
+                this.montant.voulu,
+                this.montant.actuel,
+                this.montant.gagne_par_heure
+            );
+            this.temps_necessaire = res.temps_necessaire;
+            this.date_fin = res.date_fin;
+        },
+
+        async calculerDateFuture() {
+            const { jours, heures, minutes } = this.timeInput;
+            this.dateResult = await pywebview.api.calculer_date_future(jours, heures, minutes);
+        }
+
+    });
+
+
+</script>

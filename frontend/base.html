@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head id="head-placeholder">
+    <!-- JQUERY -->
+    <meta charset="UTF-8">
+    <script src="js/jquery3.2.0.min.js"></script>
+    <script src="js/jquery3.2.0.treetable.min.js"></script>
+    <script src="js/jquery.tablesorter.min.js"></script>
+    <script src="js/jquery.tablesorter.pager.js"></script>
+    <script src="js/jquery.tablesorter.widgets.js"></script>
+    <script src="js/jquery.metadata.js"></script>
+    <script src="js/jquery.contextMenu.min.js"></script>
+    <!-- Fomantic UI -->
+    <link rel="stylesheet" href="css/semantic.min.css">
+
+    <!-- Styles persos -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Alpine.js 3.8.1 (copié de l’ERP) -->
+    <script defer src="js/alpinejs3.8.1.js"></script>
+
+    <!-- Semantic UI JS -->
+    <script defer src="js/semantic.min.js"></script>
+</head>
+
+<body x-data="$store.App" x-init="initApp()">
+
+    <div class="ui container">
+        <!-- Navigation (si besoin) -->
+        <button class="ui button" @click="chargerPage('home')">Accueil</button>
+        <button class="ui primary button" @click="$store.App.chargerPage('calculateur')">Calculateur</button>
+        <button class="ui primary button" @click="$store.App.chargerPage('delai')">Délai rendements</button>
+        <button class="ui button" @click="chargerPage('autres')">Autres</button>
+
+        <!-- Contenu dynamique -->
+        <div id="main-content" class="ui segment" style="margin-top: 2rem;"></div>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('App', {
+                async initApp() {
+
+                    // Charger la page d’accueil
+                    this.chargerPage('home');
+                },
+
+                async chargerPage(page) {
+                    const html = await fetch(`pages/${page}.html`).then(res => res.text());
+                    document.getElementById('main-content').innerHTML = html;
+
+                    // Exécuter les scripts du contenu injecté
+                    document.querySelectorAll('#main-content script').forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        if (oldScript.src) {
+                            newScript.src = oldScript.src;
+                        } else {
+                            newScript.textContent = oldScript.textContent;
+                        }
+                        document.body.appendChild(newScript);
+                        oldScript.remove();
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

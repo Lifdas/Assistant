@@ -1,0 +1,14 @@
+<div x-data="$store.Home" x-init="mounted">
+  <h2>Bienvenue !</h2>
+  <p>Clique sur “Calculateur” pour tester.</p>
+
+  <script>
+   
+      Alpine.store('Home', {
+        mounted() {
+          console.log("Page d'accueil chargée");
+        }
+      })
+
+  </script>
+</div>
