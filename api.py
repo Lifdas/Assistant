@@ -7,14 +7,13 @@ import json
 class API:
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.ressources_file = os.path.join(base_dir, 'data', 'ressources.json')
+        self.expedition_file = os.path.join(base_dir, 'data', 'expeditions.json')
 
     def get_datas(self):
-            logger.critical("api get_datas lancée")      
             try:
-                with open(self.ressources_file, 'r', encoding='utf-8') as file:
-                    logger.critical(json.load(file))
-                    return json.load(file)
+                with open(self.expedition_file, 'r', encoding='utf-8') as file:
+                    datas = json.load(file)
+                    return datas
             except FileNotFoundError:
                 # si le dossier ou le fichier n'existe pas encore
                 return {}
@@ -63,3 +62,11 @@ class API:
         delta  = timedelta(days=jours, hours=heures, minutes=minutes)
         finish = now + delta
         return finish.strftime("%d/%m/%Y %H:%M")
+    
+    def save_expeditions(self, expeditions):
+        try:
+            with open(self.expedition_file, 'w', encoding='utf-8') as file:
+                json.dump(expeditions, file, ensure_ascii=False, indent=4)
+            logger.info("Expéditions enregistrées avec succès.")
+        except Exception as e:
+            logger.error(f"Erreur lors de l'enregistrement des expéditions : {e}")

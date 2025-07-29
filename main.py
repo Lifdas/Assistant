@@ -22,10 +22,10 @@ if __name__ == '__main__':
     index_html = resource_path(os.path.join('frontend', 'base.html'))
     # webview.create_window acceptera file://URL
     window = webview.create_window(
-        title='Assistant de Calcul',
+        title="Assistant d'optimisation",
         url=f'file://{index_html}',
         js_api=api,
-        width=800,
+        width=900,
         height=600,
         resizable=True
     )

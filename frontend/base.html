@@ -2,6 +2,8 @@
 <html lang="fr">
 
 <head id="head-placeholder">
+    <!-- Font Awesome local -->
+    <link rel="stylesheet" href="css/all.min.css">
     <!-- JQUERY -->
     <meta charset="UTF-8">
     <script src="js/jquery3.2.0.min.js"></script>
@@ -22,6 +24,8 @@
 
     <!-- Semantic UI JS -->
     <script defer src="js/semantic.min.js"></script>
+
+
 </head>
 
 <body x-data="$store.App" x-init="initApp()">
@@ -29,7 +33,7 @@
     <div class="ui container">
         <!-- Navigation (si besoin) -->
         <button class="ui button" @click="chargerPage('home')">Accueil</button>
-        <button class="ui primary button" @click="$store.App.chargerPage('calculateur')">Calculateur</button>
+        <button class="ui primary button" @click="$store.App.chargerPage('expeditions')">Expeditions</button>
         <button class="ui primary button" @click="$store.App.chargerPage('delai')">Délai rendements</button>
         <button class="ui button" @click="chargerPage('autres')">Autres</button>
 

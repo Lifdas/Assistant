@@ -1,7 +1,7 @@
 pyinstaller `
 >>   --onefile `
 >>   --windowed `
->>   --name "OgameHelper" `
+>>   --name "AssistantData" `
 >>   --icon "assets/icon.ico" `
 >>   --add-data "frontend;frontend" `
 >>   --add-data "data;data" `

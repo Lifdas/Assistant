@@ -1,0 +1,118 @@
+<div x-data="$store.expeditions" x-init="mounted">
+   <table 
+      class="ui fixed celled selectable table" 
+      style="table-layout: fixed; width: 100%; min-width: 600px;"
+    >
+      <!-- 3) On peut préciser des largeurs de colonnes si désiré -->
+      <colgroup>
+        <col style="width: 150px;">  <!-- Date -->
+        <col style="width: 120px;">  <!-- Secteur -->
+        <col style="width: 120px;">  <!-- Ressources -->
+        <col style="width: 70px;">  <!-- Actions -->
+      </colgroup>
+
+    <thead>
+      <tr>
+        <th style="--width:180px;">Date</th>
+        <th >Secteur</th>
+        <th >Ressources</th>
+        <th>Actions</th> <!-- Colonne pour le bouton -->
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="(exp, index) in expeditions" :key="index">
+        <tr>
+          <td>
+            <div class="ui input" >
+              <!-- 1) input date -->
+              <input type="date" x-model="exp.date" required />
+              <!-- 2) bouton copier (désactivé si index===0) -->
+              <button class="ui icon button" :disabled="index === 0" @click="copy_date(index)"
+                title="Copier la date précédente" x-show="!exp.date">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+          </td>
+          <td>
+            <div class="ui input">
+              <input type="text" x-model="exp.secteur" placeholder="Numéro de secteur" style="width: 135px;"/>
+            </div>
+          </td>
+          <td>
+            <div class="ui input">
+              <input type="text" class="ui input" x-model="exp.ressources" placeholder="ressource?" style="width: 135px;" />
+            </div>
+          </td>
+          <td>
+            <button class="ui red icon button" @click="remove_row(index)" title="Supprimer la ligne">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </template>
+      <tr>
+        <td colspan="4" class="center aligned">
+          <button class="ui primary button" @click="save_expeditions">Enregistrer</button>
+          <button class="ui green icon button" @click="add_row()" title="Ajouter une ligne">
+            <i class="fas fa-square-plus"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  Alpine.store('expeditions', {
+    expeditions: [],
+
+    mounted() {
+      // Initialisation avec une ligne vide
+      this.show();
+      this.add_row();
+    },
+
+    add_row() {
+      // Pousse une nouvelle expédition avec date actuelle
+      this.expeditions.push({
+        secteur: '',
+        ressources: '',
+        date: '',
+      });
+    },
+
+    remove_row(index) {
+      this.expeditions.splice(index, 1);
+    },
+
+    async show() {
+      try {
+        await pywebview.api.get_datas(/* args si besoin */)
+          .then(data => {
+            console.log(data)
+            this.expeditions = data
+          })
+      } catch (e) {
+        console.error('Erreur Python:', e);
+      }
+    },
+
+    save_expeditions() {
+      // Envoie les données des expéditions à l'API Python
+      pywebview.api.save_expeditions(this.expeditions)
+        .then(() => {
+          console.log("Expéditions enregistrées avec succès");
+        })
+        .catch(err => {
+          console.error("Erreur lors de l'enregistrement des expéditions:", err);
+        });
+    },
+
+    copy_date(i) {
+      if (i > 0) {
+        this.expeditions[i].date = this.expeditions[i - 1].date;
+      }
+    }
+  });
+
+</script>
