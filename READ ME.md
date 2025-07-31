@@ -5,6 +5,7 @@ pyi-makespec `
   --name AssistantData `
   --icon assets/icon.ico `
   --add-data "frontend;frontend" `
+  --add-data ".env;." `
   --paths "." `
   main.py
 
