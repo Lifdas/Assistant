@@ -1,32 +1,39 @@
 import os
 import sys
 import webview
-from api import API
+
+from dotenv import load_dotenv
+from tools.config import DevelopmentConfig
+from api_model import API
 
 def resource_path(relative_path):
     """
-    Retourne le chemin absolu vers les ressources,
-    qu’on soit en mode dev (script) ou frozen (PyInstaller).
+    Résout le chemin vers les ressources
+    que ce soit en dev ou dans le bundle PyInstaller.
     """
     if getattr(sys, 'frozen', False):
-        # PyInstaller crée un dossier temporaire et expose son chemin ici
         base_path = sys._MEIPASS
     else:
-        # En dev, on travaille depuis le dossier du script
         base_path = os.path.abspath(os.path.dirname(__file__))
     return os.path.join(base_path, relative_path)
 
 if __name__ == '__main__':
-    api = API()
-    # Construit le chemin vers frontend/base.html
-    index_html = resource_path(os.path.join('frontend', 'base.html'))
-    # webview.create_window acceptera file://URL
-    window = webview.create_window(
+    # Charger les variables d'environnement
+    load_dotenv()
+    
+    # Créer l'instance de configuration
+    config = DevelopmentConfig()
+    
+    # Créer l'API avec la configuration
+    api = API(config)
+    
+    index_html = resource_path('frontend/base.html')
+    webview.create_window(
         title="Assistant d'optimisation",
         url=f'file://{index_html}',
         js_api=api,
-        width=900,
+        width=1100,
         height=600,
-        resizable=True
+        resizable=False
     )
-    webview.start(debug=True)
+    webview.start(debug=False)

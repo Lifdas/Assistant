@@ -1,2 +1,6 @@
 loguru
 pywebview
+pymongo
+mariadb
+dotenv
+pyinstaller

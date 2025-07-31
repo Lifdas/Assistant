@@ -1,8 +1,0 @@
-pyinstaller `
->>   --onefile `
->>   --windowed `
->>   --name "AssistantData" `
->>   --icon "assets/icon.ico" `
->>   --add-data "frontend;frontend" `
->>   --add-data "data;data" `
->>   main.py
