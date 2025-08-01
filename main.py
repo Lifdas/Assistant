@@ -37,6 +37,6 @@ if __name__ == '__main__':
         js_api=api,
         width=1300,
         height=700,
-        resizable=True
+        resizable=False
     )
-    webview.start(debug=True)
+    webview.start(debug=False)

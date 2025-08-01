@@ -49,6 +49,8 @@ class TableExpeditions(Mysql):
             del datas['editing']
         if 'has_changed' in datas:
             del datas['has_changed']
+        if 'login' in datas:
+            del datas['login']
         return datas
     
     def format_from_db(self, datas):

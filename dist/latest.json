@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5",
+  "version": "0.1.7",
   "url": "http://217.154.121.75/updates/downloads/AssistantData.exe",
-  "notes": "– Ajout du système de création de compte et de login \n Ajout du créateur dans les expeditions."
+  "notes": "– Ajout du système de création de compte et de login \n Ajout du créateur dans les expeditions. \n Correction de l'update qui ne fonctionnait pas correctement."
 }
