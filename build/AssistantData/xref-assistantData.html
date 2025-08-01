@@ -21,7 +21,6 @@ imports:
     <a href="#_collections_abc">_collections_abc</a>
  &#8226;   <a href="#_weakrefset">_weakrefset</a>
  &#8226;   <a href="#abc">abc</a>
- &#8226;   <a href="#api_model">api_model</a>
  &#8226;   <a href="#codecs">codecs</a>
  &#8226;   <a href="#collections">collections</a>
  &#8226;   <a href="#collections.abc">collections.abc</a>
@@ -157,6 +156,7 @@ imports:
  &#8226;   <a href="#keyword">keyword</a>
  &#8226;   <a href="#linecache">linecache</a>
  &#8226;   <a href="#locale">locale</a>
+ &#8226;   <a href="#modules.api.api_model">modules.api.api_model</a>
  &#8226;   <a href="#ntpath">ntpath</a>
  &#8226;   <a href="#operator">operator</a>
  &#8226;   <a href="#os">os</a>
@@ -1054,7 +1054,8 @@ imported by:
   <a name="_cffi_backend"></a>
   <tt>_cffi_backend</tt> <span class="moduletype"><tt>C:\Users\f.porter\Documents\dev\AssistantData\venv\Lib\site-packages\_cffi_backend.cp312-win_amd64.pyd</tt></span>  <div class="import">
 imported by:
-    <a href="#cffi.api">cffi.api</a>
+    <a href="#bcrypt">bcrypt</a>
+ &#8226;   <a href="#cffi.api">cffi.api</a>
  &#8226;   <a href="#cffi.commontypes">cffi.commontypes</a>
  &#8226;   <a href="#cffi.verifier">cffi.verifier</a>
 
@@ -2135,47 +2136,6 @@ imported by:
 <span class="moduletype">MissingModule</span>  <div class="import">
 imported by:
     <a href="#typing_extensions">typing_extensions</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="api_bdd"></a>
-  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/api_bdd.py" type="text/plain"><tt>api_bdd</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#datetime">datetime</a>
- &#8226;   <a href="#json">json</a>
- &#8226;   <a href="#loguru">loguru</a>
- &#8226;   <a href="#tools.mysql">tools.mysql</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#api_model">api_model</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="api_model"></a>
-  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/api_model.py" type="text/plain"><tt>api_model</tt></a>
-<span class="moduletype">SourceModule</span>  <div class="import">
-imports:
-    <a href="#api_bdd">api_bdd</a>
- &#8226;   <a href="#datetime">datetime</a>
- &#8226;   <a href="#loguru">loguru</a>
- &#8226;   <a href="#requests">requests</a>
- &#8226;   <a href="#requests.adapters">requests.adapters</a>
- &#8226;   <a href="#urllib3.util.retry">urllib3.util.retry</a>
- &#8226;   <a href="#version">version</a>
-
-  </div>
-  <div class="import">
-imported by:
-    <a href="#main.py">main.py</a>
 
   </div>
 
@@ -3290,6 +3250,39 @@ imported by:
  &#8226;   <a href="#urllib.request">urllib.request</a>
  &#8226;   <a href="#urllib3.util.request">urllib3.util.request</a>
  &#8226;   <a href="#xmlrpc.client">xmlrpc.client</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="bcrypt"></a>
+  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/venv/Lib/site-packages/bcrypt/__init__.py" type="text/plain"><tt>bcrypt</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#_cffi_backend">_cffi_backend</a>
+ &#8226;   <a href="#bcrypt._bcrypt">bcrypt._bcrypt</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#bcrypt._bcrypt">bcrypt._bcrypt</a>
+ &#8226;   <a href="#modules.users.user_model">modules.users.user_model</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="bcrypt._bcrypt"></a>
+  <tt>bcrypt._bcrypt</tt> <span class="moduletype"><tt>C:\Users\f.porter\Documents\dev\AssistantData\venv\Lib\site-packages\bcrypt\_bcrypt.pyd</tt></span>  <div class="import">
+imports:
+    <a href="#bcrypt">bcrypt</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#bcrypt">bcrypt</a>
 
   </div>
 
@@ -5733,8 +5726,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#_strptime">_strptime</a>
- &#8226;   <a href="#api_bdd">api_bdd</a>
- &#8226;   <a href="#api_model">api_model</a>
  &#8226;   <a href="#bottle">bottle</a>
  &#8226;   <a href="#calendar">calendar</a>
  &#8226;   <a href="#email.utils">email.utils</a>
@@ -5745,6 +5736,9 @@ imported by:
  &#8226;   <a href="#loguru._string_parsers">loguru._string_parsers</a>
  &#8226;   <a href="#mariadb.cursors">mariadb.cursors</a>
  &#8226;   <a href="#mariadb.dbapi20">mariadb.dbapi20</a>
+ &#8226;   <a href="#modules.api.api_bdd">modules.api.api_bdd</a>
+ &#8226;   <a href="#modules.api.api_model">modules.api.api_model</a>
+ &#8226;   <a href="#modules.users.user_bdd">modules.users.user_bdd</a>
  &#8226;   <a href="#requests.models">requests.models</a>
  &#8226;   <a href="#requests.sessions">requests.sessions</a>
  &#8226;   <a href="#setuptools._vendor.tomli._re">setuptools._vendor.tomli._re</a>
@@ -10959,14 +10953,15 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#api_bdd">api_bdd</a>
- &#8226;   <a href="#bottle">bottle</a>
+    <a href="#bottle">bottle</a>
  &#8226;   <a href="#charset_normalizer.models">charset_normalizer.models</a>
  &#8226;   <a href="#clr_loader.util.runtime_spec">clr_loader.util.runtime_spec</a>
  &#8226;   <a href="#json.decoder">json.decoder</a>
  &#8226;   <a href="#json.encoder">json.encoder</a>
  &#8226;   <a href="#json.scanner">json.scanner</a>
  &#8226;   <a href="#loguru._handler">loguru._handler</a>
+ &#8226;   <a href="#modules.api.api_bdd">modules.api.api_bdd</a>
+ &#8226;   <a href="#modules.users.user_bdd">modules.users.user_bdd</a>
  &#8226;   <a href="#requests.compat">requests.compat</a>
  &#8226;   <a href="#setuptools._vendor.importlib_metadata">setuptools._vendor.importlib_metadata</a>
  &#8226;   <a href="#setuptools.config._validate_pyproject.error_reporting">setuptools.config._validate_pyproject.error_reporting</a>
@@ -11231,9 +11226,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#api_bdd">api_bdd</a>
- &#8226;   <a href="#api_model">api_model</a>
- &#8226;   <a href="#loguru">loguru</a>
+    <a href="#loguru">loguru</a>
  &#8226;   <a href="#loguru._asyncio_loop">loguru._asyncio_loop</a>
  &#8226;   <a href="#loguru._better_exceptions">loguru._better_exceptions</a>
  &#8226;   <a href="#loguru._colorama">loguru._colorama</a>
@@ -11252,6 +11245,10 @@ imported by:
  &#8226;   <a href="#loguru._recattrs">loguru._recattrs</a>
  &#8226;   <a href="#loguru._simple_sinks">loguru._simple_sinks</a>
  &#8226;   <a href="#loguru._string_parsers">loguru._string_parsers</a>
+ &#8226;   <a href="#modules.api.api_bdd">modules.api.api_bdd</a>
+ &#8226;   <a href="#modules.api.api_model">modules.api.api_model</a>
+ &#8226;   <a href="#modules.users.user_bdd">modules.users.user_bdd</a>
+ &#8226;   <a href="#modules.users.user_model">modules.users.user_model</a>
  &#8226;   <a href="#tools.mysql">tools.mysql</a>
 
   </div>
@@ -12191,6 +12188,136 @@ imported by:
 imported by:
     <a href="#multiprocessing.heap">multiprocessing.heap</a>
  &#8226;   <a href="#multiprocessing.shared_memory">multiprocessing.shared_memory</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules"></a>
+  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/modules/__init__.py" type="text/plain"><tt>modules</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imported by:
+    <a href="#modules.api">modules.api</a>
+ &#8226;   <a href="#modules.users">modules.users</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.api"></a>
+  <a target="code" href="-" type="text/plain"><tt>modules.api</tt></a>
+<span class="moduletype">NamespacePackage</span>  <div class="import">
+imports:
+    <a href="#modules">modules</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.api.api_bdd">modules.api.api_bdd</a>
+ &#8226;   <a href="#modules.api.api_model">modules.api.api_model</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.api.api_bdd"></a>
+  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/modules/api/api_bdd.py" type="text/plain"><tt>modules.api.api_bdd</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#datetime">datetime</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#loguru">loguru</a>
+ &#8226;   <a href="#modules.api">modules.api</a>
+ &#8226;   <a href="#tools.mysql">tools.mysql</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.api.api_model">modules.api.api_model</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.api.api_model"></a>
+  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/modules/api/api_model.py" type="text/plain"><tt>modules.api.api_model</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#datetime">datetime</a>
+ &#8226;   <a href="#loguru">loguru</a>
+ &#8226;   <a href="#modules.api">modules.api</a>
+ &#8226;   <a href="#modules.api.api_bdd">modules.api.api_bdd</a>
+ &#8226;   <a href="#modules.users.user_model">modules.users.user_model</a>
+ &#8226;   <a href="#requests">requests</a>
+ &#8226;   <a href="#requests.adapters">requests.adapters</a>
+ &#8226;   <a href="#urllib3.util.retry">urllib3.util.retry</a>
+ &#8226;   <a href="#version">version</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#main.py">main.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.users"></a>
+  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/modules/users/__init__.py" type="text/plain"><tt>modules.users</tt></a>
+<span class="moduletype">Package</span>  <div class="import">
+imports:
+    <a href="#modules">modules</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.users.user_bdd">modules.users.user_bdd</a>
+ &#8226;   <a href="#modules.users.user_model">modules.users.user_model</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.users.user_bdd"></a>
+  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/modules/users/user_bdd.py" type="text/plain"><tt>modules.users.user_bdd</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#datetime">datetime</a>
+ &#8226;   <a href="#json">json</a>
+ &#8226;   <a href="#loguru">loguru</a>
+ &#8226;   <a href="#modules.users">modules.users</a>
+ &#8226;   <a href="#tools.mysql">tools.mysql</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.users.user_model">modules.users.user_model</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="modules.users.user_model"></a>
+  <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/modules/users/user_model.py" type="text/plain"><tt>modules.users.user_model</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#bcrypt">bcrypt</a>
+ &#8226;   <a href="#loguru">loguru</a>
+ &#8226;   <a href="#modules.users">modules.users</a>
+ &#8226;   <a href="#modules.users.user_bdd">modules.users.user_bdd</a>
+ &#8226;   <a href="#time">time</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#modules.api.api_model">modules.api.api_model</a>
 
   </div>
 
@@ -14982,8 +15109,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#api_model">api_model</a>
- &#8226;   <a href="#main.py">main.py</a>
+    <a href="#main.py">main.py</a>
+ &#8226;   <a href="#modules.api.api_model">modules.api.api_model</a>
  &#8226;   <a href="#requests">requests</a>
  &#8226;   <a href="#requests.__version__">requests.__version__</a>
  &#8226;   <a href="#requests._internal_utils">requests._internal_utils</a>
@@ -15073,7 +15200,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#api_model">api_model</a>
+    <a href="#modules.api.api_model">modules.api.api_model</a>
  &#8226;   <a href="#requests.sessions">requests.sessions</a>
 
   </div>
@@ -20776,6 +20903,7 @@ imported by:
  &#8226;   <a href="#loguru._datetime">loguru._datetime</a>
  &#8226;   <a href="#mariadb.connectionpool">mariadb.connectionpool</a>
  &#8226;   <a href="#mariadb.dbapi20">mariadb.dbapi20</a>
+ &#8226;   <a href="#modules.users.user_model">modules.users.user_model</a>
  &#8226;   <a href="#multiprocessing.connection">multiprocessing.connection</a>
  &#8226;   <a href="#multiprocessing.managers">multiprocessing.managers</a>
  &#8226;   <a href="#multiprocessing.pool">multiprocessing.pool</a>
@@ -21000,8 +21128,9 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#api_bdd">api_bdd</a>
- &#8226;   <a href="#main.py">main.py</a>
+    <a href="#main.py">main.py</a>
+ &#8226;   <a href="#modules.api.api_bdd">modules.api.api_bdd</a>
+ &#8226;   <a href="#modules.users.user_bdd">modules.users.user_bdd</a>
 
   </div>
 
@@ -22895,8 +23024,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#api_model">api_model</a>
- &#8226;   <a href="#main.py">main.py</a>
+    <a href="#main.py">main.py</a>
+ &#8226;   <a href="#modules.api.api_model">modules.api.api_model</a>
  &#8226;   <a href="#requests.adapters">requests.adapters</a>
  &#8226;   <a href="#urllib3">urllib3</a>
  &#8226;   <a href="#urllib3.connectionpool">urllib3.connectionpool</a>
@@ -23166,8 +23295,8 @@ imported by:
   <a target="code" href="///C:/Users/f.porter/Documents/dev/AssistantData/version.py" type="text/plain"><tt>version</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imported by:
-    <a href="#api_model">api_model</a>
- &#8226;   <a href="#main.py">main.py</a>
+    <a href="#main.py">main.py</a>
+ &#8226;   <a href="#modules.api.api_model">modules.api.api_model</a>
 
   </div>
 

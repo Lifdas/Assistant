@@ -8,6 +8,7 @@
         <col style="width: 120px;"> <!-- Ressources -->
         <col style="width: 120px;"> <!-- Montant -->
         <col style="width: 100px;"> <!-- Actions -->
+        <col style="width: 100px;"> <!-- Login -->
       </colgroup>
 
       <thead>
@@ -16,13 +17,13 @@
           <th>Secteur</th>
           <th>Ressources</th>
           <th>Valeur USM</th>
+          <th>Joueur</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td colspan="5" class="center aligned">
-
+          <td colspan="6" class="center aligned">
             <button class="ui green icon button" @click="add_row()" title="Ajouter une ligne">
               <i class="fas fa-square-plus"></i>
             </button>
@@ -69,6 +70,8 @@
                 <select x-model="exp.ressources" class="ui dropdown" style="width: 120px;"
                   @change="exp.has_changed = true">
                   <option value="rien">rien</option>
+                  <option value="pirates">Pirates</option>
+                  <option value="aliens">Aliens</option>
                   <option value="metal">Métal</option>
                   <option value="cristal">Cristal</option>
                   <option value="deuterium">Deutérium</option>
@@ -77,13 +80,13 @@
                 </select>
               </div>
             </td>
-
             <td>
               <div class="ui input" style="width: 120px;">
                 <input type="text" x-model="getDisplayValue(exp)" @focus="startEditingSimple(exp, $event)"
                   @blur="finishEditingSimple(exp, $event)" @input="exp.new_expedition = true" placeholder="Montant" />
               </div>
             </td>
+            <td x-text="exp.login"></td>
             <td>
               <div class="row">
                 <button class="ui red icon button tiny" @click="remove_row(exp.id, index)" title="Supprimer la ligne">
@@ -97,6 +100,7 @@
                 </button>
               </div>
             </td>
+            
           </tr>
         </template>
 
@@ -115,14 +119,12 @@
       // Initialisation avec une ligne vide
       this.show();
       this.add_row();
-      console.log(this.copying)
     },
 
     async show() {
       try {
         await pywebview.api.get_datas(/* args si besoin */)
           .then(data => {
-            console.log(data)
             this.expeditions = data;
           })
       } catch (e) {
@@ -160,6 +162,7 @@
 
     save_expedition(expedition) {
       // Envoie les données des expéditions à l'API Python
+
       pywebview.api.save_expedition(expedition)
         .then(() => {
           console.log("Expéditions enregistrées avec succès");

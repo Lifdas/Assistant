@@ -4,7 +4,7 @@ import webview
 
 from dotenv import load_dotenv
 from tools.config import DevelopmentConfig
-from api_model import API
+from modules.api.api_model import API
 from version import __version__
 
 
@@ -35,8 +35,8 @@ if __name__ == '__main__':
         title="Assistant d'optimisation",
         url=f'file://{index_html}',
         js_api=api,
-        width=1100,
-        height=600,
-        resizable=False
+        width=1300,
+        height=700,
+        resizable=True
     )
     webview.start(debug=True)

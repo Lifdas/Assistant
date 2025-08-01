@@ -6,3 +6,4 @@ dotenv
 pyinstaller
 requests
 urllib3
+bcrypt
