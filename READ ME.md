@@ -1,4 +1,4 @@
-# Créer les specs
+# Créer les specs (SUPPRIME LES IMPORTS CACHÉS)
 pyi-makespec `
   --onefile `
   --windowed `
@@ -14,3 +14,4 @@ hiddenimports=['tools.mysql'],
 
 # lancer le fichier des specs
 pyinstaller AssistantData.spec
+

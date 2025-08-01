@@ -70,6 +70,7 @@ class TableExpeditions(Mysql):
             SELECT {_table}.id, {_table}.date_expedition, {_table}.secteur, {_table}.ressources, {_table}.valeur_usm
             FROM {_table}
             WHERE {_table}.deleted = 0
+            ORDER BY {_table}.date_expedition DESC
             """
         rs = self.fetch(query)
         return self.format_from_db(rs)

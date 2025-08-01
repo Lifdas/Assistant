@@ -7,7 +7,12 @@ a = Analysis(
     binaries=[],
     datas=[('frontend', 'frontend'),
     ('.env', '.')],
-    hiddenimports=['tools.mysql'],
+    hiddenimports=[
+        'tools.mysql',
+        'requests',
+        'urllib3.util.retry',      
+        'urllib3',
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

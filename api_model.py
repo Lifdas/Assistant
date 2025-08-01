@@ -1,12 +1,38 @@
 from datetime import datetime, timedelta
 from loguru import logger
-
+from version import __version__
 from api_bdd import TableExpeditions
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 class API():
     def __init__(self, config=None):
         self.config = config
         self._id = 0
+    
+    def get_version(self):
+        return __version__
+
+    def fetch_latest(self):
+        """Récupère latest.json depuis ton serveur de mises à jour."""
+        url = 'http://217.154.121.75/updates/latest.json'
+        session = requests.Session()
+        retries = Retry(
+            total=2,
+            backoff_factor=0.3,
+            status_forcelist=[502, 503, 504],
+            raise_on_status=False
+        )
+        session.mount('http://', HTTPAdapter(max_retries=retries))
+
+        try:
+            res = session.get(url, timeout=(5, 10))
+            res.raise_for_status()
+            return res.json()
+        except Exception as e:
+            # On renvoie une structure uniforme en cas d’erreur
+            return {'error': str(e)}
 
     def get_datas(self):
         db = TableExpeditions(configClass=self.config)

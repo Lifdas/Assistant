@@ -4,3 +4,5 @@ pymongo
 mariadb
 dotenv
 pyinstaller
+requests
+urllib3

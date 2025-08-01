@@ -25,7 +25,7 @@
     <!-- Semantic UI JS -->
     <script defer src="js/semantic.min.js"></script>
     <script src="js/moment-with-locales.min.js"></script>
-    
+
 
 
 </head>
@@ -67,7 +67,27 @@
                         document.body.appendChild(newScript);
                         oldScript.remove();
                     });
+                },
+
+                async checkUpdates() {
+                    try {
+                        const current = await window.pywebview.api.get_version();
+                        const json = await window.pywebview.api.fetch_latest();
+
+                        if (json.error) throw new Error(json.error);
+                        if (json.version !== current) {
+                            if (confirm(`Nouvelle v${json.version} dispo.\nNotes:\n${json.notes}\n\nOK pour télécharger ?`)) {
+                                window.open(json.url, '_blank');
+                            }
+                        } else {
+                            alert("Vous êtes à jour !");
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        alert("Erreur vérification MAJ : " + e.message);
+                    }
                 }
+
             });
         });
     </script>
