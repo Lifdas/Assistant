@@ -64,22 +64,22 @@ class User():
    
 
 
-    def search(self, searchKeys=False):
-        """ recherche dans la bdd local"""
-        searchKeysFiltered = dict()
-        # Filtrage des clés venant du front
-        if searchKeys :
-            for k,v in searchKeys.items():
-                if len(str(v).strip()) > 0 :
-                    searchKeysFiltered[k] = v        
+    # def search(self, searchKeys=False):
+    #     """ recherche dans la bdd local"""
+    #     searchKeysFiltered = dict()
+    #     # Filtrage des clés venant du front
+    #     if searchKeys :
+    #         for k,v in searchKeys.items():
+    #             if len(str(v).strip()) > 0 :
+    #                 searchKeysFiltered[k] = v        
 
-        # if not 'deleted' in searchKeys:
-        #     searchKeysFiltered['deleted'] = 0
+    #     # if not 'deleted' in searchKeys:
+    #     #     searchKeysFiltered['deleted'] = 0
 
-        db = Db()
-        rs = db.search(filters=searchKeysFiltered)
-        if not rs :
-            rs = []
+    #     db = Db()
+    #     rs = db.search(filters=searchKeysFiltered)
+    #     if not rs :
+    #         rs = []
 
-        return rs
+    #     return rs
     

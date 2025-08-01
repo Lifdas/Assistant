@@ -124,35 +124,40 @@
     </div>
 
     <!-- Application principale -->
-    <!-- <div class="ui container" :class="{ 'blurred': $store.App.showLogin }"> -->
         <!-- Navigation -->
-        <!-- <div class="ui menu" style="margin-top: 2rem;">
-            <a class="item" @click="$store.App.chargerPage('home')">
-                <i class="home icon"></i> Accueil
-            </a>
-            <a class="item" @click="$store.App.chargerPage('expeditions')">
-                <i class="shipping icon"></i> Expéditions
-            </a>
-            <a class="item" @click="$store.App.chargerPage('delai')">
-                <i class="clock icon"></i> Délai rendements
-            </a>
-            <a class="item" @click="$store.App.chargerPage('autres')">
-                <i class="ellipsis horizontal icon"></i> Autres
-            </a>
+ <div class="ui container" :class="{ 'blurred': $store.App.showLogin }">
+        <!-- Navigation -->
+        <div class="custom-navigation" style="margin-top: 2rem;">
+            <button class="nav-button" @click="$store.App.chargerPage('home')">
+                <i class="fas fa-home"></i> Accueil
+            </button>
+            <button class="nav-button primary" @click="$store.App.chargerPage('expeditions')">
+                <i class="fas fa-shipping-fast"></i> Expéditions
+            </button>
+            <button class="nav-button primary" @click="$store.App.chargerPage('delai')">
+                <i class="fas fa-clock"></i> Délai rendements
+            </button>
+            <button class="nav-button" @click="$store.App.chargerPage('autres')">
+                <i class="fas fa-ellipsis-h"></i> Autres
+            </button>
+            <div class="nav-spacer"></div>
+            <button class="nav-button logout" @click="$store.App.logout()">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
+        </div>
+  
+        <!-- <div class="ui container" :class="{ 'blurred': $store.App.showLogin }">
+            <button class="item" @click="chargerPage('home')">Accueil</button>
+            <button class="item" @click="$store.App.chargerPage('expeditions')"> <i class="shipping icon"></i> Expeditions</button>
+            <button class="item" @click="$store.App.chargerPage('delai')">Délai rendements</button>
+            <button class="ui button" @click="chargerPage('autres')">Autres</button>
+            
             <div class="right menu">
                 <a class="item" @click="$store.App.logout()">
                     <i class="sign out icon"></i> Déconnexion
                 </a>
-            </div>
-        </div> -->
-        <div class="ui container" :class="{ 'blurred': $store.App.showLogin }">
-        <!-- Navigation (si besoin) -->
-        <button class="ui button" @click="chargerPage('home')">Accueil</button>
-        <button class="ui primary button" @click="$store.App.chargerPage('expeditions')">Expeditions</button>
-        <button class="ui primary button" @click="$store.App.chargerPage('delai')">Délai rendements</button>
-        <button class="ui button" @click="chargerPage('autres')">Autres</button>
-
-        <!-- Contenu dynamique -->
+            </div> -->
+            <!-- Contenu dynamique -->
         <div id="main-content" class="ui segment" style="margin-top: 2rem;"></div>
     </div>
 
@@ -207,9 +212,7 @@
                             oldScript.remove();
                         });
                     } catch (error) {
-                        console.error('Erreur chargement page:', error);
-                        document.getElementById('main-content').innerHTML =
-                            '<div class="ui negative message"><i class="warning icon"></i>Erreur de chargement de la page</div>';
+                        console.error('Erreur chargement page:', error)
                     }
                 },
 
