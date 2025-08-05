@@ -3,10 +3,16 @@
 
 a = Analysis(
     ['main.py'],
-    pathex=[],
+    pathex=['.'],
     binaries=[],
-    datas=[('frontend', 'frontend'), ('data', 'data')],
-    hiddenimports=[],
+    datas=[('frontend', 'frontend'),
+    ('.env', '.')],
+    hiddenimports=[
+        'tools.mysql',
+        'requests',
+        'urllib3.util.retry',      
+        'urllib3',
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -22,7 +28,11 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
+<<<<<<<< HEAD:Assistant.spec
     name='Assistant',
+========
+    name='AssistantData',
+>>>>>>>> expeditions:AssistantData.spec
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

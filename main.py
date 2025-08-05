@@ -1,32 +1,42 @@
 import os
 import sys
 import webview
-from api import API
+
+from dotenv import load_dotenv
+from tools.config import DevelopmentConfig
+from modules.api.api_model import API
+from version import __version__
+
 
 def resource_path(relative_path):
-    """
-    Retourne le chemin absolu vers les ressources,
-    qu’on soit en mode dev (script) ou frozen (PyInstaller).
-    """
+    """ adapté PyInstaller """
     if getattr(sys, 'frozen', False):
-        # PyInstaller crée un dossier temporaire et expose son chemin ici
-        base_path = sys._MEIPASS
+        base = sys._MEIPASS
     else:
-        # En dev, on travaille depuis le dossier du script
-        base_path = os.path.abspath(os.path.dirname(__file__))
-    return os.path.join(base_path, relative_path)
+        base = os.path.abspath(os.path.dirname(__file__))
+    return os.path.join(base, relative_path)
+
+def get_version():
+    """ Récupère la version de l'application """
+    return __version__
 
 if __name__ == '__main__':
-    api = API()
-    # Construit le chemin vers frontend/base.html
-    index_html = resource_path(os.path.join('frontend', 'base.html'))
-    # webview.create_window acceptera file://URL
-    window = webview.create_window(
+    # Charger les variables d'environnement
+    dotenv_path = resource_path('.env')
+    load_dotenv(dotenv_path)
+    # Créer l'instance de configuration
+    config = DevelopmentConfig()
+    
+    # Créer l'API avec la configuration
+    api = API(config)
+    
+    index_html = resource_path('frontend/base.html')
+    webview.create_window(
         title="Assistant d'optimisation",
         url=f'file://{index_html}',
         js_api=api,
-        width=900,
-        height=600,
+        width=1300,
+        height=700,
         resizable=True
     )
     webview.start(debug=True)

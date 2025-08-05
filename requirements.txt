@@ -1,2 +1,9 @@
 loguru
 pywebview
+pymongo
+mariadb
+dotenv
+pyinstaller
+requests
+urllib3
+bcrypt
