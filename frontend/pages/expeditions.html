@@ -38,7 +38,7 @@
                 <!-- 2) bouton copier (désactivé si index===0) -->
                 <button class="ui icon button" @click="copy_date(index)" title="Copier la date précédente"
                   x-show="!exp.date_expedition">
-                  <i class="fas fa-copy"></i>
+                   <i class="fas fa-arrow-down"></i>
                 </button>
               </div>
             </td>
@@ -77,6 +77,7 @@
                   <option value="deuterium">Deutérium</option>
                   <option value="antimatiere">AntiMatière</option>
                   <option value="vaisseaux">Vaisseaux</option>
+                  <option value="objet">Objet</option>
                 </select>
               </div>
             </td>
@@ -136,10 +137,10 @@
       // Pousse une nouvelle expédition en première position
       this.expeditions.unshift({
         secteur: '',
-        ressources: '',
+        ressources: 'rien',
         date_expedition: '',
         new_expedition: true,
-        valeur_usm: 0,
+        valeur_usm: null,
       });
     },
 
@@ -165,7 +166,7 @@
 
       pywebview.api.save_expedition(expedition)
         .then(() => {
-          console.log("Expéditions enregistrées avec succès");
+          Alpine.store('NotifToast').success('Expédition sauvegardée avec succès').show()
           expedition.new_expedition = false;
           expedition.has_changed = false;
         })

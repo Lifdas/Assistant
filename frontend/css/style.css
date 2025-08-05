@@ -264,6 +264,19 @@
             color: white;
         }
 
+        .nav-button.secondary {
+            background: linear-gradient(135deg, #3cace0 0%, #8cdfbf 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .nav-button.secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(131, 196, 226, 0.4);
+            filter: brightness(1.1);
+            color: white;
+        }
+
         .nav-button.logout {
             background: #f8f9fa;
             border-color: #e74c3c;
