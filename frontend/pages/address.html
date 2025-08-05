@@ -1,0 +1,141 @@
+<div x-data="$store.address" x-init="mounted()">
+    <button class="ui green labeled icon button" @click="isShow = !isShow" style="
+    position: fixed;
+    top: 192px;
+    left: 947px;
+    z-index: 1000;
+  ">
+        <i class="plus icon"></i>
+        Créer une planète
+    </button>
+
+    <!-- Le formulaire flottant -->
+    <div x-show="isShow" x-transition class="ui segment" style="
+    position: fixed;
+    top: 213px;     /* juste en-dessous du bouton */
+    left: 925px;
+    width: 240px;  /* largeur fixe */
+    z-index: 1000;
+  ">
+        <form class="ui form">
+            <div class="field">
+                <label>Nom</label>
+                <input type="text" x-model="form.nom" placeholder="Nom de la planète" style="width: 169px;" required>
+            </div>
+            <div class="field">
+                <input type="number" x-model="form.galaxie" style="width: 40px;" required>
+
+                <input type="number" x-model="form.secteur" style="width: 80px;" required>
+
+                <input type="number" x-model="form.emplacement" style="width: 40px;" required>
+            </div>
+            <div class="field">
+                <label>Notes</label>
+                <input type="text" x-model="form.notes" placeholder="QG, Deuté, Avant poste">
+            </div>
+            <div class="field">
+                <label>Lune</label>
+                <input type="checkbox" x-model="form.lune">
+                <label>Porte de saut spatial</label>
+                <input type="checkbox" x-model="form.porte">
+            </div>
+            <div style="display:flex; justify-content: center;">
+                <button class="nav-button primary" type='button' @click="saveAddress()" style="width: 100px; margin-top: 10px;">
+                    <i class="check icon"></i> Ajouter
+                </button>
+            </div>
+        </form>
+    </div>
+    <!-- la liste des planètes -->
+    <div>
+        <template x-for="(joueur, jIndex) in planetesList" :key="jIndex">
+            <div class="ui segment">
+
+                <h3 class="ui dividing header" x-text="joueur.login"></h3>
+
+
+                <div class="planetes-wrapper" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                    <template x-for="(planete, pIndex) in joueur.planetes" :key="pIndex">
+                        <div class="ui card clickable" style="width: 200px; min-height: 100px;">
+                            <div class="content">
+
+                                <div class="header" x-text="planete.nom"></div>
+
+                                <div class="meta"
+                                    style="font-size: 1.2em; display: flex; align-items: center; gap: 0.5rem;">
+                                    <span
+                                        x-text="planete.galaxie + ':' + planete.secteur + ':' + planete.emplacement"></span>
+                                </div>
+
+                                <div class="description" x-text="planete.notes" style="padding-bottom: 10px;"></div>
+                                <div class="ui four column grid">
+                                    <div class="column" x-show="planete.lune"><i class="fa-solid fa-moon"></i></div>
+                                    <div class="column" x-show="planete.porte"><i class="fa-solid fa-rocket"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+<script>
+
+    Alpine.store('address', {
+        isShow: false,
+        form: {
+            nom: '',
+            galaxie: '',
+            secteur: '',
+            emplacement: '',
+            notes: '',
+            lune: false,
+            porte: false
+        },
+
+        planetesList: [],
+
+        mounted() {
+            console.log('Page addresses chargée')
+            this.search_address();
+        },
+
+        async search_address() {
+            await pywebview.api.get_all_addresses()
+                .then(response => {
+                    console.log(response)
+                    this.planetesList = response;
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des planètes:', error);
+                });
+        },
+
+        async saveAddress() {
+            console.log(this.form)
+            try {
+                await pywebview.api.create_address(this.form)
+                    .then(response => {
+                        if (response) {
+                            this.resetForm();
+                            this.isShow = false; // Ferme le formulaire après la sauvegarde
+
+                        }
+                    });
+            } catch (e) {
+                console.error('Erreur lors de la sauvegarde de l\'adresse:', e);
+            }
+        },
+
+        resetForm() {
+            this.form.nom = '';
+            this.form.galaxie = '';
+            this.form.secteur = '';
+            this.form.emplacement = '';
+            this.form.notes = '';
+            this.form.lune = false;
+            this.form.porte = false;
+        }
+    });
+</script>

@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
 from loguru import logger
 from version import __version__
-from modules.api.api_bdd import TableExpeditions
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from modules.users.user_model import User
+from modules.api.expeditions_bdd import TableExpeditions
+from modules.api.address_bdd import TableAddress
 
 class API():
     def __init__(self, config=None):
@@ -84,13 +85,21 @@ class API():
         return finish.strftime("%d/%m/%Y %H:%M")
     
     def check_fields(self, expedition):
+        logger.critical(expedition)
         if 'date_expedition' not in expedition or not expedition['date_expedition']:
             raise ValueError("La date d'expédition est obligatoire.")
         if 'secteur' not in expedition or not expedition['secteur']:
             raise ValueError("Le secteur est obligatoire.")
+        if expedition['ressources'] != 'objet' and expedition['ressources'] != 'pirates' and expedition['ressources'] != 'aliens' and expedition['ressources'] != 'rien':
+            logger.info("ça boucle")
+            try:
+                float(expedition['valeur_usm'])
+            except ValueError:
+                raise ValueError("Les ressources doivent être un nombre valide.")
         return True
         
-    
+    # expeditions
+
     def save_expedition(self, expedition):
         self.check_fields(expedition)
         expedition['createdBy'] = self._id
@@ -109,7 +118,8 @@ class API():
         db = TableExpeditions(configClass=self.config)
         rs = db.delete(id)
         return True
-    
+
+    #Utilisateurs    
     def get_users_list(self):
         logger.info('api déclenchée')
         user_model = User(config=self.config)
@@ -124,6 +134,7 @@ class API():
         raise ValueError("Erreur lors de la création de l'utilisateur")
     
     def login(self, login, password):
+
         user_model = User(config=self.config)
         user = user_model.login(login=login, password=password)
         if user:
@@ -131,3 +142,17 @@ class API():
             self._login = user['login']
             return user
         raise ValueError("Identifiants invalides")
+    
+    #Coordonées
+    def create_address(self, address):
+        db = TableAddress(configClass=self.config)
+        address['createdBy'] = self._id
+        rs = db.create(address)
+        if rs:
+            return True
+        raise ValueError("Erreur lors de la création de la planète")
+
+    def get_all_addresses(self):
+        db = TableAddress(configClass=self.config)
+        addresses = db.get_all_planets()
+        return addresses
