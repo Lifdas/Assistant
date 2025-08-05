@@ -1,0 +1,299 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #ffffff;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* Bouton de création */
+.create-planet-btn {
+    position: fixed;
+    top: 192px;
+    left: 947px;
+    z-index: 1000;
+    background: linear-gradient(135deg, #66d6ea 0%, #54e0a6 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+}
+
+.create-planet-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+/* Formulaire flottant */
+.floating-form {
+    position: fixed;
+    top: 213px;
+    left: 925px;
+    width: 280px;
+    z-index: 1000;
+    background: linear-gradient(145deg, #f0f4f8, #ffffff);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e1e8ed;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 13px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #66d6ea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.coordinates-row {
+    display: flex;
+    gap: 8px;
+}
+
+.coord-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    width: 80px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.checkbox-item label {
+    font-size: 13px;
+    color: #4a5568;
+}
+
+.submit-btn {
+    width: 120px;
+    margin: 15px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+}
+
+/* Section des joueurs */
+.player-section {
+    background: #f8fafc;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.player-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Grille des planètes */
+.planets-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Cartes des planètes - Thème spatial */
+.planet-card {
+    width: 220px;
+    min-height: 140px;
+    background: linear-gradient(145deg, #1a202c, #2d3748);
+    border-radius: 15px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #4a5568;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.planet-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.planet-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    border-color: #66d6ea;
+}
+
+.planet-card:hover::before {
+    opacity: 1;
+}
+
+.planet-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 8px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.planet-coordinates {
+    font-size: 16px;
+    color: #66d6ea;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+}
+
+.planet-notes {
+    font-size: 13px;
+    color: #a0aec0;
+    margin-bottom: 12px;
+    font-style: italic;
+}
+
+.planet-features {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.feature-icon {
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.moon-icon {
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.portal-icon {
+    color: #ff6b6b;
+    text-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+}
+
+.feature-icon:hover {
+    transform: scale(1.2);
+}
+
+/* Animations subtiles */
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.planet-card:nth-child(odd) .planet-coordinates {
+    animation: twinkle 3s ease-in-out infinite;
+}
+
+.planet-card:nth-child(even) .planet-coordinates {
+    animation: twinkle 4s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .create-planet-btn {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin: 20px;
+    }
+
+    .floating-form {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: calc(100% - 40px);
+        margin: 20px;
+    }
+
+    .planets-grid {
+        justify-content: center;
+    }
+
+    .planet-card {
+        width: 100%;
+        max-width: 300px;
+    }
+}
