@@ -4,6 +4,7 @@ from tools.mysql import Mysql
 from datetime import datetime, date
 
 _table = "expeditions"
+_users = "users"
 
 class TableExpeditions(Mysql):
     
@@ -28,7 +29,6 @@ class TableExpeditions(Mysql):
             `date_expedition` DATETIME NOT NULL,
             `secteur` INT(11) NOT NULL,
             `ressources` VARCHAR(50) NULL DEFAULT '' COLLATE 'utf8mb4_unicode_ci',
-            `valeur_usm` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
             `createdAt` DATETIME NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
             `createdBy` INT(10) UNSIGNED NOT NULL,
             `updatedAt` DATETIME NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -70,16 +70,44 @@ class TableExpeditions(Mysql):
             formatted.append(row)
 
         # 3) Renvoie la liste prête à être sérialisée en JSON
+
         return formatted
 
     
     def get_all_datas(self, datas=None):
         query = f"""
-            SELECT {_table}.id, {_table}.date_expedition, {_table}.secteur, {_table}.ressources, {_table}.valeur_usm, users.login
+            SELECT {_table}.id, {_table}.date_expedition, {_table}.secteur, {_table}.ressources, {_users}.login
             FROM {_table}
-            LEFT JOIN users ON users.id = {_table}.createdBy
+            LEFT JOIN {_users} ON {_users}.id = {_table}.createdBy
             WHERE {_table}.deleted = 0
             ORDER BY {_table}.date_expedition DESC
             """
+        rs = self.fetch(query)
+        return self.format_from_db(rs)
+    
+    def get_latest_expeditions(self):
+        query = f"""
+            SELECT  {_table}.id, {_table}.date_expedition, {_table}.secteur, {_table}.ressources, {_users}.login
+            FROM {_table}
+            JOIN( 
+                SELECT 
+                secteur,
+                MAX(date_expedition) AS max_date
+                FROM {_table}
+                WHERE deleted = 0
+                GROUP BY secteur
+                
+            ) AS time
+            ON {_table}.secteur = time.secteur
+            AND {_table}.date_expedition = time.max_date
+
+            LEFT JOIN {_users} ON {_users}.id = {_table}.createdBy
+
+            WHERE {_table}.deleted = 0
+            ORDER BY {_table}.secteur
+            
+
+
+        """
         rs = self.fetch(query)
         return self.format_from_db(rs)

@@ -109,6 +109,7 @@
                 await pywebview.api.create_address(this.form)
                     .then(response => {
                         if (response) {
+                            Alpine.store('NotifToast').success('Planète mises à jour avec succès').show()
                             this.resetForm();
                             this.isShow = false;
                         }

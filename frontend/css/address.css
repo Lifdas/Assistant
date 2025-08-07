@@ -14,7 +14,7 @@ body {
 /* Bouton de création */
 .create-planet-btn {
     position: fixed;
-    top: 122px;
+    top: 150px;
     left: 947px;
     z-index: 1000;
     background: linear-gradient(135deg, #66d6ea 0%, #54e0a6 100%);
@@ -140,7 +140,6 @@ body {
 
 /* Section des joueurs */
 .player-section {
-    background: #f8fafc;
     margin: 20px;
     padding: 20px;
     border-radius: 15px;
@@ -150,7 +149,7 @@ body {
 .player-title {
     font-size: 24px;
     font-weight: 700;
-    color: #2d3748;
+    color: #eef087;
     margin: 0 0 20px 0;
     padding-bottom: 10px;
     border-bottom: 2px solid #e2e8f0;

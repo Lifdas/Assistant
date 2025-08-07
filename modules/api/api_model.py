@@ -46,10 +46,7 @@ class API():
             # On renvoie une structure uniforme en cas d’erreur
             return {'error': str(e)}
 
-    def get_datas(self):
-        db = TableExpeditions(configClass=self.config)
-        datas = db.get_all_datas()  # Passer un paramètre vide pour éviter l'erreur
-        return datas
+
             
     def calculer_delai(self, voulu: float, actuel: float, gagne_par_heure: float):
         voulu = float(voulu)
@@ -99,16 +96,42 @@ class API():
             raise ValueError("La date d'expédition est obligatoire.")
         if 'secteur' not in expedition or not expedition['secteur']:
             raise ValueError("Le secteur est obligatoire.")
-        if expedition['ressources'] != 'objet' and expedition['ressources'] != 'pirates' and expedition['ressources'] != 'aliens' and expedition['ressources'] != 'rien':
-            try:
-                float(expedition['valeur_usm'])
-            except ValueError:
-                raise ValueError("Les ressources doivent être un nombre valide.")
+
         return True
     
    ###################
    ### Expeditions ###
    ###################
+    def get_datas(self):
+        db = TableExpeditions(configClass=self.config)
+        expeditions = db.get_all_datas() 
+        echecs = ['aliens', 'pirates', 'rien']
+
+        joueurs_map = {}
+        for row in expeditions:
+            login = row['login']
+            if login not in joueurs_map:
+                joueurs_map[login] = {'login': login, 'total': 0, 'exp_reussie': 0}
+            joueur = joueurs_map[login]
+
+            if row['ressources'] not in echecs:
+                joueur['exp_reussie'] += 1
+            joueur['total'] += 1
+
+        for joueur in joueurs_map.values():
+            taux = (joueur['exp_reussie'] * 100) / joueur['total'] if joueur['total'] else 0
+            joueur['rate'] = round(taux, 2)
+
+        #les datas des joueurs
+        joueurs = list(joueurs_map.values())
+        #les dernières expeiditions selon les secteurs
+        latest_expeditions = db.get_latest_expeditions()
+
+        datas = {}
+        datas['expeditions'] = latest_expeditions
+        datas['rate_success'] = joueurs
+
+        return datas
 
     def save_expedition(self, expedition):
         self.check_fields(expedition)

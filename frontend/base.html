@@ -16,8 +16,6 @@
     <!-- Fomantic UI -->
     <link rel="stylesheet" href="css/semantic.min.css">
 
-    <!-- Styles persos -->
-    <link rel="stylesheet" href="css/style.css">
 
     <!-- Alpine.js 3.8.1 (copié de l'ERP) -->
     <script defer src="js/alpinejs3.8.1.js"></script>
@@ -28,16 +26,74 @@
     <script src="js/moment-with-locales.min.js"></script>
     <link href="css/app_semantic.css" rel="stylesheet" media="screen">
 
+    <!-- Styles persos -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- expeditions -->
+    <link rel="stylesheet" href="css/expeditions.css">
     <!-- addresses -->
     <link rel="stylesheet" href="css/address.css">
-    
+
+    <style>
+        body {
+            font-family: 'Orbitron', monospace;
+
+            /* ton background existant… */
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 30%, #16213e 70%, #0f3460 100%);
+            background-attachment: fixed;
+            /* ← IMPORTANT */
+            background-repeat: no-repeat;
+            /* optionnel, selon que tu veuilles répéter ou pas */
+            background-size: cover;
+            /* ou “contain” / un pourcentage, selon effet voulu */
+
+            min-height: 100vh;
+            color: #e0e6ed;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.15), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.1), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.2), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.1), transparent),
+                radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.15), transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            z-index: -1;
+            animation: stars 20s linear infinite;
+        }
+
+        @keyframes stars {
+            from {
+                transform: translateY(0px);
+            }
+
+            to {
+                transform: translateY(-100px);
+            }
+        }
+    </style>
+
+
 </head>
 
 <body x-data="$store.App" x-init="initApp()">
     <!-- Toast Notification -->
     <div x-data="$store.NotifToast" id="toast" style="z-index:9999; border-radius: 5px; border: 2px solid #636363;">
-        <div style="position:absolute; top:0px; right: 8px; font-weight:bold;;"
-            class="clickable" @click="close()">x</div>
+        <div style="position:absolute; top:0px; right: 8px; font-weight:bold;;" class="clickable" @click="close()">x
+        </div>
         <div class="b" x-text="$store.NotifToast.title"></div>
         <div x-text="$store.NotifToast.message"></div>
     </div>
@@ -51,7 +107,7 @@
         <div class="login-card">
             <!-- En-tête -->
             <div class="login-header">
-                <i class="fas fa-user-shield icon"></i>
+                <img src="../assets/icon.ico" alt="Mon icône" width="50" height="50">
                 <h2>Bienvenue</h2>
                 <p style="margin: 0; opacity: 0.9;">Accédez à votre espace</p>
             </div>
@@ -137,10 +193,10 @@
     </div>
 
     <!-- Application principale -->
-    <div class="ui container" style="padding:0px":class="{ 'blurred': $store.App.showLogin }">
+    <div class="ui container" style="padding:0px" :class="{ 'blurred': $store.App.showLogin }">
         <!-- Navigation -->
         <div class="custom-navigation" style="margin-top: 2rem;">
-            <button class="nav-button" @click="$store.App.chargerPage('home')">
+            <button class="nav-button primary" @click="$store.App.chargerPage('home')">
                 <i class="fas fa-home"></i> Accueil
             </button>
             <button class="nav-button primary" @click="$store.App.chargerPage('expeditions')">
@@ -152,7 +208,7 @@
             <button class="nav-button primary" @click="$store.App.chargerPage('address')">
                 <i class="fa-solid fa-font-awesome"></i> Coordonnées
             </button>
-            <button class="nav-button" @click="$store.App.chargerPage('autres')">
+            <button class="nav-button secondary" @click="$store.App.chargerPage('autres')">
                 <i class="fas fa-ellipsis-h"></i> Autres
             </button>
             <div class="nav-spacer"></div>
@@ -164,7 +220,7 @@
 
 
         <!-- Contenu dynamique -->
-        <div id="main-content" class="ui segment" style="margin-top: 2rem;"></div>
+        <div id="main-content" style="margin-top: 2rem;"></div>
     </div>
 
 
@@ -252,9 +308,7 @@
                             this.user_id = response.user.id;
                             this.user_login = response.user.login;
                             this.showLogin = false;
-                            this.login.password = '';
-                            console.log("le login error", this.loginError)
-                            
+                            this.user_logs.password = '';
                         }
                     } catch (error) {
                         console.error('Erreur connexion:', error);
@@ -303,8 +357,8 @@
                 logout() {
                     if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
                         this.showLogin = true;
-                        this.login.user = '';
-                        this.login.password = '';
+                        this.user_logs.login = '';
+                        this.user_logs.password = '';
                         this.clearMessages();
                     }
                 },

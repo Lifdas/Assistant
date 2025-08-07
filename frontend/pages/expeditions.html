@@ -1,14 +1,30 @@
 <div x-data="$store.expeditions" x-init="mounted()">
-  <div class="ui segment" style="max-height: 600px; overflow-y: auto; padding: 0;">
-    <table class="ui fixed celled selectable table" style="table-layout: fixed; width: 100%; min-width: 600px;">
+  <div style="max-height: 600px; padding: 0;">
+
+    <div style="width: 27%">
+      <h2><i class="fas fa-chart-bar"></i> Statistiques</h2>
+      <div class="analytics-section">
+        <!-- Statistiques générales -->
+        <div class="analytics-card">
+          <div class="stat-card">
+            <span class="stat-label">Taux de réussite</span>
+            <template x-for="player in rateSuccess" :key="index">
+              <div x-text="player.login+ ': ' +player.rate+ ' %'"></div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h1><i class="fas fa-rocket"></i> Dernières secteurs explorés</h1>
+    <table class="ui fixed celled table" style="table-layout: fixed; width: 100%; min-width: 600px;">
       <!-- 3) On peut préciser des largeurs de colonnes si désiré -->
       <colgroup>
-        <col style="width: 200px;"> <!-- Date -->
-        <col style="width: 160px;"> <!-- Secteur -->
+        <col style="width: 180px;"> <!-- Date -->
+        <col style="width: 122px;"> <!-- Secteur -->
         <col style="width: 120px;"> <!-- Ressources -->
-        <col style="width: 120px;"> <!-- Montant -->
         <col style="width: 100px;"> <!-- Actions -->
-        <col style="width: 100px;"> <!-- Login -->
+        <col style="width: 110px;"> <!-- Login -->
       </colgroup>
 
       <thead>
@@ -16,14 +32,13 @@
           <th>Date & Heure</th>
           <th>Secteur</th>
           <th>Ressources</th>
-          <th>Valeur USM</th>
           <th>Joueur</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td colspan="6" class="center aligned">
+          <td colspan="5" class="center aligned">
             <button class="ui green icon button" @click="add_row()" title="Ajouter une ligne">
               <i class="fas fa-square-plus"></i>
             </button>
@@ -32,13 +47,13 @@
         <template x-for="(exp, index) in expeditions" :key="index">
           <tr>
             <td>
-              <div class="ui input">
+              <div class="ui input" style="width: 80%;">
                 <!-- 1) input date -->
                 <input type="datetime-local" x-model="exp.date_expedition" @change="exp.has_changed = true" required />
                 <!-- 2) bouton copier (désactivé si index===0) -->
                 <button class="ui icon button" @click="copy_date(index)" title="Copier la date précédente"
                   x-show="!exp.date_expedition">
-                   <i class="fas fa-arrow-down"></i>
+                  <i class="fas fa-arrow-down"></i>
                 </button>
               </div>
             </td>
@@ -54,12 +69,7 @@
                   x-show="!copying && exp.secteur">
                   <i class="fa-solid fa-copy"></i>
                 </button>
-                  <button class="ui icon button" @click="delete_secteur(index)" title="Supprimer le secteur"
-                  x-show="exp.secteur">
-                  <i class="fa-solid fa-eraser"></i>
-                </button>
-                <button class="ui icon button" @click="paste_secteur(index)" title="Coller le secteur"
-                  x-show="copying && !exp.secteur">
+                <button class="ui icon button" @click="paste_secteur(index)" title="Coller le secteur" x-show="copying">
                   <i class="fa-solid fa-paste"></i>
                 </button>
 
@@ -81,12 +91,6 @@
                 </select>
               </div>
             </td>
-            <td>
-              <div class="ui input" style="width: 120px;">
-                <input type="text" x-model="getDisplayValue(exp)" @focus="startEditingSimple(exp, $event)"
-                  @blur="finishEditingSimple(exp, $event)" @input="exp.new_expedition = true" placeholder="Montant" />
-              </div>
-            </td>
             <td x-text="exp.login"></td>
             <td>
               <div class="row">
@@ -96,12 +100,13 @@
                 <button class="ui primary button tiny" x-show="exp.new_expedition" @click="save_expedition(exp)">
                   <i class="fas fa-save"></i>
                 </button>
-                <button class="ui primary button tiny" x-show="exp.has_changed && !exp.new_expedition" @click="update_expedition(exp)">
+                <button class="ui primary button tiny" x-show="exp.has_changed && !exp.new_expedition"
+                  @click="update_expedition(exp)">
                   <i class="fas fa-refresh"></i>
                 </button>
               </div>
             </td>
-            
+
           </tr>
         </template>
 
@@ -109,10 +114,12 @@
     </table>
   </div>
 </div>
+</div>
 
 <script>
   Alpine.store('expeditions', {
     expeditions: [],
+    rateSuccess: [],
     copying: false,
     copy: '',
 
@@ -126,7 +133,10 @@
       try {
         await pywebview.api.get_datas(/* args si besoin */)
           .then(data => {
-            this.expeditions = data;
+            this.expeditions = data.expeditions;
+            this.rateSuccess = data.rate_success
+            console.log(JSON.parse(this.expeditions))
+            console.log(this.rateSuccess)
           })
       } catch (e) {
         console.error('Erreur Python:', e);
@@ -145,18 +155,18 @@
     },
 
     remove_row(id, index) {
-      if(!id){
+      if (!id) {
         this.expeditions.splice(index, 1);
       }
-      else{
-      pywebview.api.delete_expedition(id)
-        .then(() => {
-          console.log("Expédition supprimée avec succès");
-          this.expeditions.splice(index, 1);
-        })
-        .catch(err => {
-          console.error("Erreur lors de la suppression de l'expédition:", err);
-        });
+      else {
+        pywebview.api.delete_expedition(id)
+          .then(() => {
+            Alpine.store('NotifToast').success('Expédition supprimée avec succès').show()
+            this.expeditions.splice(index, 1);
+          })
+          .catch(err => {
+            console.error("Erreur lors de la suppression de l'expédition:", err);
+          });
       }
     },
 
@@ -179,7 +189,7 @@
       // Envoie les données des expéditions à l'API Python
       pywebview.api.update_expedition(expedition)
         .then(() => {
-          console.log("Expéditions mises à jour avec succès");
+          Alpine.store('NotifToast').success('Expéditions mises à jour avec succès').show()
           expedition.has_changed = false;
         })
         .catch(err => {
@@ -203,7 +213,11 @@
 
     copying_secteur(i) {
       this.copying = true;
-      this.copy = this.expeditions[i].secteur;
+      const secteur = this.expeditions[i].secteur;
+      this.copy = secteur;
+      Alpine.store('NotifToast')
+        .info(`Secteur ${secteur} copié !`)
+        .show();
     },
 
     paste_secteur(i) {
@@ -211,44 +225,44 @@
         this.expeditions[i].secteur = this.copy;
         this.copy = '';
         this.copying = false;
-        this.expeditions[i].has_changed = true; 
+        this.expeditions[i].has_changed = true;
       }
     },
 
     delete_secteur(i) {
       this.expeditions[i].secteur = '';
-      this.expeditions[i].has_changed = true; 
+      this.expeditions[i].has_changed = true;
     },
 
     // concerne le champ valeur usm
-    formatValue(val) {
-      if (val == null || val === '') return '';
-      const n = Number(val);
-      if (isNaN(n)) return val;
-      // Abréviations
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + ' M';
-      if (n >= 100_000) return Math.round(n / 1_000) + ' k';
-      if (n >= 10_000) return (n / 1_000).toFixed(1) + ' k';
-      // Séparateurs de milliers
-      return new Intl.NumberFormat('fr-FR').format(n);
-    },
+    // formatValue(val) {
+    //   if (val == null || val === '') return '';
+    //   const n = Number(val);
+    //   if (isNaN(n)) return val;
+    //   // Abréviations
+    //   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + ' M';
+    //   if (n >= 100_000) return Math.round(n / 1_000) + ' k';
+    //   if (n >= 10_000) return (n / 1_000).toFixed(1) + ' k';
+    //   // Séparateurs de milliers
+    //   return new Intl.NumberFormat('fr-FR').format(n);
+    // },
 
-    getDisplayValue(exp) {
-      return exp.editing ? exp.valeur_usm : this.formatValue(exp.valeur_usm);
-    },
+    // getDisplayValue(exp) {
+    //   return exp.editing ? exp.valeur_usm : this.formatValue(exp.valeur_usm);
+    // },
 
-    startEditingSimple(exp, event) {
-      exp.editing = true;
-      event.target.value = exp.valeur_usm || '';
-      event.target.select();
-    },
+    // startEditingSimple(exp, event) {
+    //   exp.editing = true;
+    //   event.target.value = exp.valeur_usm || '';
+    //   event.target.select();
+    // },
 
-    finishEditingSimple(exp, event) {
-      exp.editing = false;
-      const value = event.target.value;
-      exp.valeur_usm = value === '' ? '' : Number(value);
-      event.target.value = this.formatValue(exp.valeur_usm);
-    }
+    // finishEditingSimple(exp, event) {
+    //   exp.editing = false;
+    //   const value = event.target.value;
+    //   exp.valeur_usm = value === '' ? '' : Number(value);
+    //   event.target.value = this.formatValue(exp.valeur_usm);
+    // }
 
   });
 
