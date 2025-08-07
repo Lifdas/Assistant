@@ -1,5 +1,5 @@
 {
-  "version": "0.1.8",
+  "version": "0.2.1",
   "url": "http://217.154.121.75/updates/downloads/AssistantData.exe",
-  "notes": "– Ajout d'un visuel préférée au précedent et harmonisation des couleurs de l'application."
+  "notes": "Ajout du système d'adresse permettant de répertorier les planètes de l'alliance et leurs coordonées"
 }

@@ -14,7 +14,7 @@ body {
 /* Bouton de création */
 .create-planet-btn {
     position: fixed;
-    top: 192px;
+    top: 122px;
     left: 947px;
     z-index: 1000;
     background: linear-gradient(135deg, #66d6ea 0%, #54e0a6 100%);

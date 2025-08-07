@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Détails planète</title>
+    <!-- Font Awesome local -->
+    <link rel="stylesheet" href="../css/all.min.css">
+    <!-- JQUERY -->
+    <meta charset="UTF-8">
+    <script src="../js/jquery3.2.0.min.js"></script>
+    <script src="../js/jquery3.2.0.treetable.min.js"></script>
+    <script src="../js/jquery.tablesorter.min.js"></script>
+    <script src="../js/jquery.tablesorter.pager.js"></script>
+    <script src="../js/jquery.tablesorter.widgets.js"></script>
+    <script src="../js/jquery.metadata.js"></script>
+    <script src="../js/jquery.contextMenu.min.js"></script>
+    <!-- Fomantic UI -->
+    <link rel="stylesheet" href="../css/semantic.min.css">
+
+    <!-- Styles persos -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <!-- Alpine.js 3.8.1 (copié de l'ERP) -->
+    <script defer src="../js/alpinejs3.8.1.js"></script>
+    <script defer src="../js/app.js"></script>
+
+    <!-- Semantic UI JS -->
+    <script defer src="../js/semantic.min.js"></script>
+    <script src="../js/moment-with-locales.min.js"></script>
+    <link href="../css/app_semantic.css" rel="stylesheet" media="screen">
+
+    <!-- addresses -->
+    <link rel="stylesheet" href="../css/planete.css">
+
+</head>
+
+<body x-data="Detail" x-init="mounted">
+    <div class="planet-container" x-show="planet">
+        <!-- Header avec titre éditable -->
+        <div class="planet-header">
+            <h1 class="planet-title">
+                <span x-show="!isEditing" x-text="planet.nom"></span>
+                <input x-show="isEditing" x-model="editForm.nom" type="text" placeholder="Nom de la planète">
+            </h1>
+        </div>
+
+        <!-- Bouton toggle édition -->
+        <div class="edit-toggle">
+            <button class="toggle-btn" @click="toggleEdit()">
+                <i class="fas" :class="isEditing ? 'fa-times' : 'fa-edit'"></i>
+                <span x-text="isEditing ? 'Annuler' : 'Modifier'"></span>
+            </button>
+        </div>
+
+        <!-- Coordonnées -->
+        <div class="planet-field">
+            <label class="field-label">Coordonnées Galactiques</label>
+            <div class="field-content">
+                <div x-show="!isEditing" class="coordinates-value"
+                    x-text="planet.galaxie + ':' + planet.secteur + ':' + planet.emplacement"></div>
+                <div x-show="isEditing" class="coordinates-row">
+                    <input type="number" x-model="editForm.galaxie" class="coord-input">
+                    <input type="number" x-model="editForm.secteur" class="coord-input">
+                    <input type="number" x-model="editForm.emplacement" class="coord-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="planet-field">
+            <label class="field-label">Notes Tactiques</label>
+            <div class="field-content">
+                <div x-show="!isEditing" class="field-value" x-text="planet.notes || 'Aucune note'"></div>
+                <input x-show="isEditing" x-model="editForm.notes" class="field-input" type="text"
+                    placeholder="QG, Deuté, Avant poste...">
+            </div>
+        </div>
+
+        <!-- Caractéristiques -->
+        <div class="planet-field">
+            <label class="field-label">Caractéristiques</label>
+            <div class="field-content">
+                <!-- Mode lecture -->
+                <div x-show="!isEditing" class="feature-icons">
+                    <div x-show="planet.lune" class="feature-icon moon-icon" title="Lune">
+                        <i class="fas fa-moon"></i> Lune
+                    </div>
+                    <div x-show="planet.porte" class="feature-icon portal-icon" title="Porte de saut spatial">
+                        <i class="fas fa-rocket"></i> Portail
+                    </div>
+                </div>
+
+                <!-- Mode édition -->
+                <div x-show="isEditing" class="checkbox-container">
+                    <div class="checkbox-item">
+                        <input type="checkbox" :checked="editForm.lune === 1 " @change="editForm.lune = $event.target.checked ? 1 : 0" id="edit-lune">
+                        <i class="fas fa-moon moon-icon "></i>
+                        <label for="edit-lune">Lune présente</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" :checked="editForm.porte === 1" @change="editForm.porte = $event.target.checked ? 1 : 0" id="edit-porte">
+                        <i class="fas fa-rocket portal-icon "></i>
+                        <label for="edit-porte">Porte de saut spatial</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Boutons d'action (visible seulement en édition) -->
+        <div x-show="isEditing" class="action-buttons">
+            <button class="btn btn-save" @click="savePlanet()">
+                <i class="fas fa-save"></i> Sauvegarder
+            </button>
+            <button class="btn btn-delete" @click="deletePlanet()">
+                <i class="fas fa-trash"></i> Supprimer
+            </button>
+        </div>
+    </div>
+
+    <!-- Loader -->
+    <div x-show="!planet" class="loader">
+        <div class="spinner"></div>
+        <p>Chargement des données de la planète...</p>
+    </div>
+
+    <script>
+        function getParam(name) {
+            const hash = window.location.hash.substring(1);
+            console.log("l'url est:", hash);
+            return new URLSearchParams(hash).get(name);
+        }
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('Detail', () => ({
+                planetId: getParam('id'),
+                planet: {
+                    id: 0,
+                    nom: '',
+                    galaxie: '',
+                    secteur: '',
+                    emplacement: '',
+                    notes: '',
+                    lune: false,
+                    porte: false
+                },
+                isEditing: false,
+                editForm: {
+                    id: 0,
+                    nom: '',
+                    galaxie: '',
+                    secteur: '',
+                    emplacement: '',
+                    notes: '',
+                    lune: false,
+                    porte: false
+                },
+                originalData: null,
+
+                mounted() {
+                    // Écouter l'événement pywebviewready
+                    window.addEventListener('pywebviewready', async () => {
+                        try {
+                            this.planet = await window.pywebview.api.get_planet(this.planetId);
+                            this.originalData = this.planet
+                        } catch (error) {
+                            console.error("Erreur lors de la récupération:", error);
+                        }
+                    });
+                },
+                toggleEdit() {
+                    if (this.isEditing) {
+                        this.cancelEdit();
+                    } else {
+                        this.startEdit();
+                    }
+                },
+
+                startEdit() {
+                    this.isEditing = true;
+                    // Copier les données actuelles dans le formulaire d'édition
+                    this.editForm = {
+                        id: this.planet.id,
+                        nom: this.planet.nom,
+                        galaxie: this.planet.galaxie,
+                        secteur: this.planet.secteur,
+                        emplacement: this.planet.emplacement,
+                        notes: this.planet.notes,
+                        lune: this.planet.lune,
+                        porte: this.planet.porte
+                    };
+                    
+                },
+
+                cancelEdit() {
+                    this.isEditing = false;
+                    // Restaurer les données originales si nécessaire
+                    this.planet = this.originalData;
+                },
+
+                async savePlanet() {
+                    this.isEditing = true;
+                    await pywebview.api.update_planet(this.editForm)
+                        .then(() => {
+                            console.log("Planète mise à jour avec succès");
+                            this.planet = this.editForm
+                            this.isEditing = false;
+                        })
+                        .catch(err => {
+                            console.error("Erreur lors de la mise à jour de la planète", err);
+                        });
+                },
+
+                async deletePlanet() {
+                    await pywebview.api.delete_planet(this.planet.id)
+                    .then(() => {
+                            console.log("Planète supprimée avec succès");
+                            this.planet = this.editForm
+                            this.isEditing = false;
+                        })
+                        .catch(err => {
+                            console.error("Erreur lors de la suppression", err);
+                        });
+                }
+            }));
+        });
+    </script>
+</body>
+
+</html>

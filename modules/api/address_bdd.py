@@ -52,6 +52,7 @@ class TableAddress(Mysql):
         return datas
     
     def format_from_db(self, datas):
+
         if isinstance(datas, list):
             result = []
             for row in datas:
@@ -59,6 +60,10 @@ class TableAddress(Mysql):
                     'login': row['login'],
                     'planetes': json.loads(row['planetes'])
                 })
+        else:
+            for row in datas:
+                result = json.loads(datas['planete'])
+
         return result
     
     def get_all_planets(self):
@@ -68,6 +73,7 @@ class TableAddress(Mysql):
             {_users}.login AS login,
             JSON_ARRAYAGG(
                 JSON_OBJECT(
+                'id',             {_table}.id,
                 'nom',            {_table}.nom,
                 'galaxie',        {_table}.galaxie,
                 'secteur',        {_table}.secteur,
@@ -89,3 +95,24 @@ class TableAddress(Mysql):
         if rs:
             return self.format_from_db(rs)
         return []
+
+    def get_planet(self, id):
+        query = f"""
+        SELECT JSON_OBJECT(
+            'id', {_table}.id,
+            'nom', {_table}.nom,
+            'galaxie', {_table}.galaxie,
+            'secteur', {_table}.secteur,
+            'emplacement', {_table}.emplacement,
+            'notes', {_table}.notes,
+            'lune', {_table}.lune,
+            'porte', {_table}.porte
+            ) AS planete
+            FROM {_table}
+            WHERE {_table}.id = {id}
+        """
+        rs = self.fetch(query)
+        rs = self.format_from_db(rs[0])
+        if rs:
+            return rs
+        return False

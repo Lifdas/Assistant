@@ -53,7 +53,7 @@
 
                 <div class="planets-grid">
                     <template x-for="(planete, pIndex) in joueur.planetes" :key="pIndex">
-                        <div class="planet-card">
+                        <div class="planet-card" @click="open_details(planete)">
                             <div class="planet-name" x-text="planete.nom"></div>
                             <div class="planet-coordinates"
                                 x-text="planete.galaxie + ':' + planete.secteur + ':' + planete.emplacement"></div>
@@ -90,14 +90,12 @@
         planetesList: [],
 
         mounted() {
-            console.log('Page addresses chargée')
             this.search_address();
         },
 
         async search_address() {
             await pywebview.api.get_all_addresses()
                 .then(response => {
-                    console.log(response)
                     this.planetesList = response;
                 })
                 .catch(error => {
@@ -128,6 +126,51 @@
             this.form.notes = '';
             this.form.lune = false;
             this.form.porte = false;
+        },
+
+        open_details(planete) {
+            window.pywebview.api.open_planet_window(planete.id)
         }
     });
+    
+    window.handlePlanetUpdate = function (planetId, updatedData) {
+        console.log("Planète mise à jour:", planetId, updatedData);
+
+        // Si vous utilisez Alpine.js dans la fenêtre parent
+        if (typeof Alpine !== 'undefined' && Alpine.store('address')) {
+            // Recharger toutes les données
+            Alpine.store('address').search_address();
+
+            // OU mise à jour ciblée (plus efficace)
+            const store = Alpine.store('address');
+            for (let i = 0; i < store.planetesList.length; i++) {
+                const joueur = store.planetesList[i];
+                for (let j = 0; j < joueur.planetes.length; j++) {
+                    if (joueur.planetes[j].id == planetId) {
+                        // Mettre à jour directement les données
+                        Object.assign(joueur.planetes[j], updatedData);
+                        return;
+                    }
+                }
+            }
+        }
+    };
+    // Gestionnaire pour les suppressions de planètes
+    window.handlePlanetDelete = function (planetId) {
+        console.log("Planète supprimée:", planetId);
+
+        if (typeof Alpine !== 'undefined' && Alpine.store('address')) {
+            const store = Alpine.store('address');
+            for (let i = 0; i < store.planetesList.length; i++) {
+                const joueur = store.planetesList[i];
+                for (let j = 0; j < joueur.planetes.length; j++) {
+                    if (joueur.planetes[j].id == planetId) {
+                        // Supprimer la planète de la liste
+                        joueur.planetes.splice(j, 1);
+                        return;
+                    }
+                }
+            }
+        }
+    };
 </script>

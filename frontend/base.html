@@ -31,7 +31,6 @@
     <!-- addresses -->
     <link rel="stylesheet" href="css/address.css">
     
-
 </head>
 
 <body x-data="$store.App" x-init="initApp()">
@@ -198,6 +197,7 @@
                     }
                 },
 
+                //navigation
                 async chargerPage(page) {
                     try {
                         const html = await fetch(`pages/${page}.html`).then(res => res.text());
@@ -219,6 +219,7 @@
                     }
                 },
 
+                //bouton mise à jours
                 async checkUpdates() {
                     try {
                         const current = await window.pywebview.api.get_version();
@@ -238,6 +239,7 @@
                     }
                 },
 
+                //Login & Création compte
                 async attemptLogin() {
                     this.clearMessages();
                     try {
@@ -246,11 +248,13 @@
                             this.user_logs.password
                         );
 
-                        if (response) {
-                            this.user_id = response.id;
-                            this.user_login = response.login;
+                        if (response.error == false) {
+                            this.user_id = response.user.id;
+                            this.user_login = response.user.login;
                             this.showLogin = false;
                             this.login.password = '';
+                            console.log("le login error", this.loginError)
+                            
                         }
                     } catch (error) {
                         console.error('Erreur connexion:', error);
@@ -271,11 +275,7 @@
                             if (res.rs !== true) {
                                 throw new Error(res.error);
                             }
-
-                            // Afficher message de succès
                             this.createSuccess = 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.';
-
-                            // Réinitialiser les champs
                             this.user_logs.newLogin = '';
                             this.user_logs.newPassword = '';
 
@@ -314,6 +314,7 @@
                     this.createError = '';
                     this.createSuccess = '';
                 },
+
 
             });
         });

@@ -20,6 +20,8 @@ def get_version():
     """ Récupère la version de l'application """
     return __version__
 
+
+
 if __name__ == '__main__':
     # Charger les variables d'environnement
     dotenv_path = resource_path('.env')
@@ -29,6 +31,8 @@ if __name__ == '__main__':
     
     # Créer l'API avec la configuration
     api = API(config)
+
+
     
     index_html = resource_path('frontend/base.html')
     webview.create_window(
@@ -37,6 +41,6 @@ if __name__ == '__main__':
         js_api=api,
         width=1300,
         height=700,
-        resizable=True
+        resizable=False
     )
     webview.start(debug=True)

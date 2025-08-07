@@ -1,7 +1,14 @@
 from datetime import datetime, timedelta
+import json
+import os
+import sys
 from loguru import logger
+from tools.config import DevelopmentConfig
 from version import __version__
 import requests
+import webview
+from pathlib import Path
+
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from modules.users.user_model import User
@@ -11,8 +18,10 @@ from modules.api.address_bdd import TableAddress
 class API():
     def __init__(self, config=None):
         self.config = config
-        self._id = 0
+        self._user_id = 0
         self._login = None
+        self.child_windows = []  # Stocker les références des fenêtres enfants
+           
     
     def get_version(self):
         return __version__
@@ -91,25 +100,26 @@ class API():
         if 'secteur' not in expedition or not expedition['secteur']:
             raise ValueError("Le secteur est obligatoire.")
         if expedition['ressources'] != 'objet' and expedition['ressources'] != 'pirates' and expedition['ressources'] != 'aliens' and expedition['ressources'] != 'rien':
-            logger.info("ça boucle")
             try:
                 float(expedition['valeur_usm'])
             except ValueError:
                 raise ValueError("Les ressources doivent être un nombre valide.")
         return True
-        
-    # expeditions
+    
+   ###################
+   ### Expeditions ###
+   ###################
 
     def save_expedition(self, expedition):
         self.check_fields(expedition)
-        expedition['createdBy'] = self._id
+        expedition['createdBy'] = self._user_id
         db = TableExpeditions(configClass=self.config)
         rs = db.create(expedition)
         return True
     
     def update_expedition(self, expedition):
         self.check_fields(expedition)
-        expedition['updatedBy'] = self._id
+        expedition['updatedBy'] = self._user_id
         db = TableExpeditions(configClass=self.config)
         rs = db.update(expedition['id'], expedition)
         return True
@@ -119,7 +129,10 @@ class API():
         rs = db.delete(id)
         return True
 
-    #Utilisateurs    
+   ##################
+   ## Utilisateurs ##
+   ##################
+
     def get_users_list(self):
         logger.info('api déclenchée')
         user_model = User(config=self.config)
@@ -134,25 +147,135 @@ class API():
         raise ValueError("Erreur lors de la création de l'utilisateur")
     
     def login(self, login, password):
-
         user_model = User(config=self.config)
         user = user_model.login(login=login, password=password)
         if user:
-            self._id = user['id']
+            self._user_id = user['id']
             self._login = user['login']
-            return user
+            return {'error': False, 'user': user} 
         raise ValueError("Identifiants invalides")
     
-    #Coordonées
-    def create_address(self, address):
-        db = TableAddress(configClass=self.config)
-        address['createdBy'] = self._id
-        rs = db.create(address)
-        if rs:
-            return True
-        raise ValueError("Erreur lors de la création de la planète")
+   ##################
+   ### Coordonées ###
+   ##################
 
+    # création d'une fenêtre enfant
+    def open_planet_window(self, planet_id):
+        project_root = Path(__file__).resolve().parents[2]
+        planete_html = project_root / "frontend" / "pages" / "planete.html"
+        file_uri = planete_html.resolve().as_uri()
+        url      = f"{file_uri}#id={planet_id}"
+
+        webview.create_window(
+            title=f"Détails planète {planet_id}",
+            url=url,
+            js_api=self,
+            width=560,
+            height=765,
+            resizable=True
+        )
+
+    def _get_main_window(self):
+        """Trouve la fenêtre principale de manière dynamique"""
+        try:
+            for window in webview.windows:
+                if "Assistant d'optimisation" in window.title:
+                    return window
+        except Exception as e:
+            print(f"Erreur lors de la recherche de la fenêtre principale: {e}")
+        return None
+
+    #Get planetes
     def get_all_addresses(self):
         db = TableAddress(configClass=self.config)
         addresses = db.get_all_planets()
         return addresses
+    
+    def get_planet(self, planet_id):
+        db = TableAddress(configClass=self.config)
+        address = db.get_planet(planet_id)
+        return address
+    
+    #Create planetes
+    def create_address(self, address):
+        db = TableAddress(configClass=self.config)
+        address['createdBy'] = self._user_id
+        rs = db.create(address)
+        if rs:
+            self.notify_planet_created(address)
+            return True
+        raise ValueError("Erreur lors de la création de la planète")
+    
+    def notify_planet_created(self, planet_data):
+        """Notifie la fenêtre parent qu'une planète a été créée"""
+        try:
+            main_window = self._get_main_window()  # ← Récupération paresseuse
+
+            if main_window:
+                js_code = f"""
+                    if (window.handlePlanetCreate) {{
+                        window.handlePlanetCreate({json.dumps(planet_data)});
+                    }}
+                """
+                main_window.evaluate_js(js_code)
+                return True
+        except Exception as e:
+            print(f"Erreur notification création: {e}")
+        return False
+    
+    #update planetes
+    def update_planet(self, datas):
+        db = TableAddress(configClass=self.config)
+        datas['updatedBy'] = self._user_id
+        db.update(datas['id'], datas)
+        if not db.isValid():
+            raise ValueError("Modification non sauvegardée en base de données")
+        self.notify_planet_updated(datas['id'], datas)
+        return True
+    
+    def notify_planet_updated(self, planet_id, updated_data):
+        """Notifie la fenêtre parent qu'une planète a été mise à jour"""
+        try:
+            main_window = self._get_main_window()  # ← Récupération paresseuse
+            if main_window:
+                js_code = f"""
+                    if (window.handlePlanetUpdate) {{
+                        window.handlePlanetUpdate({planet_id}, {json.dumps(updated_data)});
+                    }}
+                """
+                main_window.evaluate_js(js_code)
+                return True
+        except Exception as e:
+            print(f"Erreur notification mise à jour: {e}")
+        return False
+
+
+    
+    #Delete planetes
+    def delete_planet(self, planet_id):
+        db = TableAddress(configClass=self.config)
+        datas = {}
+        datas['deleted'] = True
+        db.update(planet_id, datas)
+        if not db.isValid():
+            raise ValueError('Suppression échouée en base de données')
+        self.notify_planet_deleted(planet_id)
+        return True
+    
+    def notify_planet_deleted(self, planet_id):
+        """Notifie la fenêtre parent qu'une planète a été supprimée"""
+        try:
+            main_window = self._get_main_window()  # ← Récupération paresseuse
+
+            if main_window:
+                js_code = f"""
+                    if (window.handlePlanetDelete) {{
+                        window.handlePlanetDelete({planet_id});
+                    }}
+                """
+                main_window.evaluate_js(js_code)
+                return True
+        except Exception as e:
+            print(f"Erreur notification suppression: {e}")
+        return False
+    
