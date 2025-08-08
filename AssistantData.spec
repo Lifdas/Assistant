@@ -12,6 +12,7 @@ a = Analysis(
         'requests',
         'urllib3.util.retry',      
         'urllib3',
+        'assets',     'assets',
     ],
     hookspath=[],
     hooksconfig={},
@@ -41,5 +42,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['assets\\icon.ico'],
+    icon='assets\\icon.ico',
 )

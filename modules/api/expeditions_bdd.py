@@ -1,7 +1,7 @@
 import json
 from loguru import logger
 from tools.mysql import Mysql
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 _table = "expeditions"
 _users = "users"
@@ -69,8 +69,6 @@ class TableExpeditions(Mysql):
             row['editing'] = False
             formatted.append(row)
 
-        # 3) Renvoie la liste prête à être sérialisée en JSON
-
         return formatted
 
     
@@ -85,7 +83,11 @@ class TableExpeditions(Mysql):
         rs = self.fetch(query)
         return self.format_from_db(rs)
     
-    def get_latest_expeditions(self):
+    def get_latest_expeditions(self, secteur=False):
+        where_str= ""
+        if secteur:
+            where_str = f" AND {_table}.secteur = {secteur}"
+
         query = f"""
             SELECT  {_table}.id, {_table}.date_expedition, {_table}.secteur, {_table}.ressources, {_users}.login
             FROM {_table}
@@ -103,11 +105,11 @@ class TableExpeditions(Mysql):
 
             LEFT JOIN {_users} ON {_users}.id = {_table}.createdBy
 
-            WHERE {_table}.deleted = 0
+            WHERE {_table}.deleted = 0 {where_str}
             ORDER BY {_table}.secteur
-            
-
 
         """
         rs = self.fetch(query)
-        return self.format_from_db(rs)
+        return rs
+    
+    

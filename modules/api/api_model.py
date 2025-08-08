@@ -91,7 +91,6 @@ class API():
         return finish.strftime("%d/%m/%Y %H:%M")
     
     def check_fields(self, expedition):
-        logger.critical(expedition)
         if 'date_expedition' not in expedition or not expedition['date_expedition']:
             raise ValueError("La date d'expédition est obligatoire.")
         if 'secteur' not in expedition or not expedition['secteur']:
@@ -104,9 +103,23 @@ class API():
    ###################
     def get_datas(self):
         db = TableExpeditions(configClass=self.config)
-        expeditions = db.get_all_datas() 
-        echecs = ['aliens', 'pirates', 'rien']
+        #calcul du rating global
+        joueurs_rating = self.calcul_rating(db.get_all_datas() )
+       
+        #les dernières expeditions de 2 jours ou moins selon les secteurs et leur rating
+        latest_expeditions = db.get_latest_expeditions()
+        latest_expeditions = self.filter_two_days(latest_expeditions)
+        joueurs_rating_two_days = self.calcul_rating(latest_expeditions)
 
+        datas = {}
+        datas['expeditions'] = latest_expeditions
+        datas['rate_success_general'] = joueurs_rating
+        datas['rate_succes_two_days'] = joueurs_rating_two_days
+
+        return datas
+    
+    def calcul_rating(self, expeditions):
+        echecs = ['aliens', 'pirates', 'rien']
         joueurs_map = {}
         for row in expeditions:
             login = row['login']
@@ -124,14 +137,24 @@ class API():
 
         #les datas des joueurs
         joueurs = list(joueurs_map.values())
-        #les dernières expeiditions selon les secteurs
-        latest_expeditions = db.get_latest_expeditions()
+        
+        return joueurs
 
-        datas = {}
-        datas['expeditions'] = latest_expeditions
-        datas['rate_success'] = joueurs
+    def filter_two_days(self, datas):
+        db = TableExpeditions(configClass=self.config)
+        now = datetime.now()
+        two_days_ago = now - timedelta(days=2)
+        recent_expeditions = []
+        
+        for expedition in datas:
+            # Supposons que expedition.date_expedition est soit un datetime, soit une string
+            expedition_date = expedition['date_expedition']
+           
+            # Vérifier si l'expédition est dans les 2 derniers jours
+            if expedition_date >= two_days_ago:
+                recent_expeditions.append(expedition)
 
-        return datas
+        return db.format_from_db(recent_expeditions)
 
     def save_expedition(self, expedition):
         self.check_fields(expedition)
@@ -151,6 +174,13 @@ class API():
         db = TableExpeditions(configClass=self.config)
         rs = db.delete(id)
         return True
+    
+    def search_secteur(self, secteur):
+        db = TableExpeditions(configClass=self.config)
+        rs = db.get_latest_expeditions(secteur['secteur'])
+        return db.format_from_db(rs)
+
+
 
    ##################
    ## Utilisateurs ##
@@ -195,7 +225,7 @@ class API():
             js_api=self,
             width=560,
             height=765,
-            resizable=True
+            resizable=False
         )
 
     def _get_main_window(self):

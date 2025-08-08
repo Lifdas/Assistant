@@ -38,6 +38,7 @@
   ('argparse',
    'C:\\Users\\f.porter\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\argparse.py',
    'PYMODULE'),
+  ('assets', '-', 'PYMODULE'),
   ('ast',
    'C:\\Users\\f.porter\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\ast.py',
    'PYMODULE'),

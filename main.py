@@ -43,4 +43,4 @@ if __name__ == '__main__':
         height=700,
         resizable=False
     )
-    webview.start(debug=True)
+    webview.start(debug=False)

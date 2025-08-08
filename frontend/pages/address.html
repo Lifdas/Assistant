@@ -135,9 +135,7 @@
     });
     
     window.handlePlanetUpdate = function (planetId, updatedData) {
-        console.log("Planète mise à jour:", planetId, updatedData);
-
-        // Si vous utilisez Alpine.js dans la fenêtre parent
+        
         if (typeof Alpine !== 'undefined' && Alpine.store('address')) {
             // Recharger toutes les données
             Alpine.store('address').search_address();
@@ -158,8 +156,6 @@
     };
     // Gestionnaire pour les suppressions de planètes
     window.handlePlanetDelete = function (planetId) {
-        console.log("Planète supprimée:", planetId);
-
         if (typeof Alpine !== 'undefined' && Alpine.store('address')) {
             const store = Alpine.store('address');
             for (let i = 0; i < store.planetesList.length; i++) {

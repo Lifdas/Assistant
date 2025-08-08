@@ -127,7 +127,6 @@
     <script>
         function getParam(name) {
             const hash = window.location.hash.substring(1);
-            console.log("l'url est:", hash);
             return new URLSearchParams(hash).get(name);
         }
 
@@ -202,7 +201,6 @@
                     this.isEditing = true;
                     await pywebview.api.update_planet(this.editForm)
                         .then(() => {
-                            console.log("Planète mise à jour avec succès");
                             this.planet = this.editForm
                             this.isEditing = false;
                         })
@@ -214,7 +212,6 @@
                 async deletePlanet() {
                     await pywebview.api.delete_planet(this.planet.id)
                     .then(() => {
-                            console.log("Planète supprimée avec succès");
                             this.planet = this.editForm
                             this.isEditing = false;
                         })

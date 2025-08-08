@@ -107,7 +107,6 @@
         <div class="login-card">
             <!-- En-tête -->
             <div class="login-header">
-                <img src="../assets/icon.ico" alt="Mon icône" width="50" height="50">
                 <h2>Bienvenue</h2>
                 <p style="margin: 0; opacity: 0.9;">Accédez à votre espace</p>
             </div>
@@ -324,8 +323,6 @@
                             this.user_logs.newLogin,
                             this.user_logs.newPassword
                         ).then(res => {
-                            console.log(res.rs)
-                            console.log(res.user)
                             if (res.rs !== true) {
                                 throw new Error(res.error);
                             }

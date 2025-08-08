@@ -8,7 +8,15 @@
         <div class="analytics-card">
           <div class="stat-card">
             <span class="stat-label">Taux de réussite</span>
-            <template x-for="player in rateSuccess" :key="index">
+            <template x-for="player in rateSuccessGeneral" :key="index">
+              <div x-text="player.login+ ': ' +player.rate+ ' %'"></div>
+            </template>
+          </div>
+        </div>
+        <div class="analytics-card">
+          <div class="stat-card">
+            <span class="stat-label">Réussite sur 2 jours</span>
+            <template x-for="player in rateSuccessTwoDays" :key="index">
               <div x-text="player.login+ ': ' +player.rate+ ' %'"></div>
             </template>
           </div>
@@ -38,7 +46,22 @@
       </thead>
       <tbody>
         <tr>
-          <td colspan="5" class="center aligned">
+          <td>Recherche par secteur:</td>
+          <td>
+            <div class="input-group">
+              <select id="secteur" class="ui dropdown" x-model="search.secteur" @change="requestSearch">
+                <option value="">Tous</option>
+                <template
+                  x-for="exp in expeditions.filter((e, i, a) => a.findIndex(x => x.secteur === e.secteur) === i)"
+                  :key="exp.secteur">
+                  <option :value="exp.secteur" x-text="exp.secteur"></option>
+                </template>
+              </select>
+            </div>
+          </td>
+          <td></td>
+          <td>Ajouter une ligne</td>
+          <td>
             <button class="ui green icon button" @click="add_row()" title="Ajouter une ligne">
               <i class="fas fa-square-plus"></i>
             </button>
@@ -119,9 +142,13 @@
 <script>
   Alpine.store('expeditions', {
     expeditions: [],
-    rateSuccess: [],
+    rateSuccessGeneral: [],
+    rateSuccessTwoDays: [],
     copying: false,
     copy: '',
+    search: {
+      secteur: '',
+    },
 
     mounted() {
       // Initialisation avec une ligne vide
@@ -134,9 +161,8 @@
         await pywebview.api.get_datas(/* args si besoin */)
           .then(data => {
             this.expeditions = data.expeditions;
-            this.rateSuccess = data.rate_success
-            console.log(JSON.parse(this.expeditions))
-            console.log(this.rateSuccess)
+            this.rateSuccessGeneral = data.rate_success_general
+            this.rateSuccessTwoDays = data.rate_succes_two_days
           })
       } catch (e) {
         console.error('Erreur Python:', e);
@@ -150,7 +176,6 @@
         ressources: 'rien',
         date_expedition: '',
         new_expedition: true,
-        valeur_usm: null,
       });
     },
 
@@ -233,6 +258,16 @@
       this.expeditions[i].secteur = '';
       this.expeditions[i].has_changed = true;
     },
+
+    requestSearch() {
+      pywebview.api.search_secteur(this.search)
+        .then((data) => {
+          this.expeditions = data
+        })
+        .catch(err => {
+          console.error("Erreur lors de la mise à jour de l'expédition:", err);
+        });
+    }
 
     // concerne le champ valeur usm
     // formatValue(val) {

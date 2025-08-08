@@ -1,5 +1,5 @@
 {
-  "version": "0.2.1",
+  "version": "0.2.4",
   "url": "http://217.154.121.75/updates/downloads/AssistantData.exe",
-  "notes": "Ajout du système d'adresse permettant de répertorier les planètes de l'alliance et leurs coordonées"
+  "notes": "Ajout d'une fonction de recherche et redsign léger du tableau d'expedition \n- N'affiche plus que les 2 derniers jours,\n- Affiche les stats globales de réussite et celles des 2 derniers jours"
 }
